@@ -6,6 +6,7 @@ const modelSelect = document.getElementById('model');
 const topKInput = document.getElementById('top_k');
 const refineToggle = document.getElementById('refineToggle');
 const preprocessMethod = document.getElementById('preprocessMethod');
+const querySelect = document.getElementById('querySelect');
 const searchBtn = document.getElementById('searchBtn');
 const clearQueryBtn = document.getElementById('clearQueryBtn');
 const resultsGrid = document.getElementById('resultsGrid');
@@ -24,6 +25,43 @@ const switchPage = (targetId) => {
 navButtons.forEach((button) => {
     button.addEventListener('click', () => switchPage(button.dataset.target));
 });
+
+const loadQueries = async () => {
+    if (!querySelect) {
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/queries');
+        if (!response.ok) {
+            throw new Error(`Failed to load queries (${response.status})`);
+        }
+
+        const payload = await response.json();
+        const queries = Array.isArray(payload.queries) ? payload.queries : [];
+
+        querySelect.innerHTML = '<option value="">Select a saved query...</option>';
+        queries.forEach((item) => {
+            const option = document.createElement('option');
+            option.value = item.text || '';
+            option.textContent = `${item.query_id}: ${item.text || ''}`;
+            querySelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Query loading error:', error);
+        querySelect.innerHTML = '<option value="">Unable to load queries</option>';
+    }
+};
+
+if (querySelect) {
+    querySelect.addEventListener('change', () => {
+        if (querySelect.value) {
+            queryInput.value = querySelect.value;
+        }
+    });
+}
+
+loadQueries();
 
 const fetchSearch = async (query, model, top_k, refine, preprocessing) => {
     try {
