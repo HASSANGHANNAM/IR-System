@@ -84,6 +84,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
     gap: 1.4rem;
+    align-items: flex-start;
 }
 
 .left-panel,
@@ -100,6 +101,7 @@ body {
 .left-panel {
     display: grid;
     gap: 1.4rem;
+    align-self: start;
 }
 
 .panel-card {
@@ -251,6 +253,9 @@ body {
 .results-panel {
     display: grid;
     gap: 1rem;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding-right: 5px;
 }
 
 .results-panel .panel-header h2 {
@@ -362,5 +367,4 @@ body {
 
 .k-row {
     align-items: stretch;
-}
 }

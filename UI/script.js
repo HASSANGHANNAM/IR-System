@@ -1,3 +1,5 @@
+console.log('✅ script.js loaded');
+
 const datasetSelect = document.getElementById('dataset');
 const queryInput = document.getElementById('query');
 const modelSelect = document.getElementById('model');
@@ -24,20 +26,31 @@ navButtons.forEach((button) => {
 });
 
 const fetchSearch = async (query, model, top_k, refine, preprocessing) => {
-    const response = await fetch('/api/search', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            query,
-            model,
-            top_k,
-            refine,
-            preprocessing,
-            dataset: datasetSelect.value,
-            weights: [0.33, 0.33, 0.34],
-        }),
-    });
-    return response.json();
+    try {
+        const response = await fetch('/api/search', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                query,
+                model,
+                top_k,
+                refine,
+                preprocessing,
+                dataset: datasetSelect.value,
+                weights: [0.33, 0.33, 0.34],
+            }),
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Request failed (${response.status}): ${errorText}`);
+        }
+
+        return response.json();
+    } catch (error) {
+        console.error('Search request error:', error);
+        throw error;
+    }
 };
 
 const fetchRefine = async (query) => {
@@ -79,6 +92,7 @@ const renderResults = (items) => {
 };
 
 searchBtn.addEventListener('click', async () => {
+    alert('Search button clicked!');
     const query = queryInput.value.trim();
     const model = modelSelect.value;
     const top_k = Number(topKInput.value);
@@ -90,14 +104,18 @@ searchBtn.addEventListener('click', async () => {
         return;
     }
 
-    const response = await fetchSearch(query, model, top_k, refine, preprocessing);
+    try {
+        const response = await fetchSearch(query, model, top_k, refine, preprocessing);
 
-    if (response.error) {
-        resultsGrid.innerHTML = `<div class="result-card"><h3>خطأ</h3><p>${response.error}</p></div>`;
-        return;
+        if (response.error) {
+            resultsGrid.innerHTML = `<div class="result-card"><h3>خطأ</h3><p>${response.error}</p></div>`;
+            return;
+        }
+
+        renderResults(response.results);
+    } catch (error) {
+        resultsGrid.innerHTML = `<div class="result-card"><h3>خطأ في الشبكة</h3><p>${error.message}</p></div>`;
     }
-
-    renderResults(response.results);
 });
 
 clearQueryBtn.addEventListener('click', () => {
