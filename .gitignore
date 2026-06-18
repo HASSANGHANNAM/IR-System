@@ -6,3 +6,12 @@ __pycache__/
 *.pyc
 venv/
 .venv/
+
+
+ir_data.db
+*.db
+*.npz
+*.pkl
+*.zip
+*.jsonl
+
