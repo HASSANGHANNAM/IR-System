@@ -21,6 +21,11 @@ MODELS_DIR = ROOT / 'models'
 DB_PATH = ROOT / 'ir_data.db'
 DOCUMENTS_JSONL_PATH = DATA_DIR / 'processed_stemming' / 'corpus_original.jsonl'
 QUERIES_JSONL_PATH = DATA_DIR / 'processed_stemming' / 'queries_cleaned.jsonl'
+QRELS_PATHS = [
+    DATA_DIR / 'test.qrels',
+    DATA_DIR / 'beir' / 'webis-touche2020' / 'test.qrels',
+    ROOT / 'beir' / 'webis-touche2020' / 'test.qrels',
+]
 
 app = Flask(__name__, static_folder=str(UI_DIR), static_url_path='')
 
@@ -29,7 +34,12 @@ QUERY_CACHE = {}
 STOPWORDS = set(stopwords.words('english'))
 STEMMER = PorterStemmer()
 
+def identity(x):
+    return x
 
+def split_tokens(x):
+    return x.split()
+    
 def load_pickle(path):
     with open(path, 'rb') as f:
         return pickle.load(f)
@@ -193,6 +203,63 @@ def init_sqlite_queries():
         connection.close()
 
 
+def init_sqlite_qrels():
+    qrels_path = next((path for path in QRELS_PATHS if path.exists()), None)
+    if qrels_path is None:
+        print('⚠️ qrels file not found in expected locations')
+        return
+
+    connection = sqlite3.connect(DB_PATH)
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            'CREATE TABLE IF NOT EXISTS qrels (query_id TEXT, doc_id TEXT, score REAL, PRIMARY KEY (query_id, doc_id))'
+        )
+        cursor.execute('CREATE INDEX IF NOT EXISTS idx_qrels_query_id ON qrels(query_id)')
+        cursor.execute('SELECT COUNT(*) FROM qrels')
+        existing_count = cursor.fetchone()[0]
+
+        if existing_count == 0:
+            batch = []
+            inserted = 0
+            with open(qrels_path, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith('query-id'):
+                        continue
+                    parts = line.split('\t')
+                    if len(parts) < 3:
+                        parts = line.split()
+                    if len(parts) < 3:
+                        continue
+                    query_id, doc_id, score = parts[0], parts[1], parts[2]
+                    try:
+                        score_value = float(score)
+                    except ValueError:
+                        continue
+                    batch.append((str(query_id), str(doc_id), score_value))
+                    if len(batch) >= 5000:
+                        cursor.executemany(
+                            'INSERT OR REPLACE INTO qrels (query_id, doc_id, score) VALUES (?, ?, ?)',
+                            batch,
+                        )
+                        connection.commit()
+                        inserted += len(batch)
+                        batch.clear()
+            if batch:
+                cursor.executemany(
+                    'INSERT OR REPLACE INTO qrels (query_id, doc_id, score) VALUES (?, ?, ?)',
+                    batch,
+                )
+                connection.commit()
+                inserted += len(batch)
+            print(f'✅ تم تخزين {inserted} صف qrels في SQLite من {qrels_path}')
+        else:
+            print(f'✅ SQLite qrels جاهز ويحتوي على {existing_count} صف')
+    finally:
+        connection.close()
+
+
 def get_search_assets(preprocessing):
     key = preprocessing.lower() if preprocessing else 'stemming'
     if key in CACHE:
@@ -283,6 +350,119 @@ def get_queries_from_db():
         connection.close()
 
 
+def get_query_text_by_id(query_id):
+    connection = sqlite3.connect(DB_PATH)
+    try:
+        cursor = connection.cursor()
+        cursor.execute('SELECT text FROM queries WHERE query_id = ?', (str(query_id),))
+        row = cursor.fetchone()
+        return row[0] if row else None
+    finally:
+        connection.close()
+
+
+def get_qrels_for_query(query_id):
+    connection = sqlite3.connect(DB_PATH)
+    try:
+        cursor = connection.cursor()
+        cursor.execute(
+            'SELECT doc_id, score FROM qrels WHERE query_id = ? AND score > 0 ORDER BY score DESC, doc_id',
+            (str(query_id),),
+        )
+        return [{'doc_id': str(doc_id), 'score': float(score)} for doc_id, score in cursor.fetchall()]
+    finally:
+        connection.close()
+
+
+def get_document_titles(doc_ids):
+    if not doc_ids:
+        return {}
+
+    placeholders = ','.join(['?'] * len(doc_ids))
+    query = f'SELECT doc_id, title FROM documents WHERE doc_id IN ({placeholders})'
+    connection = sqlite3.connect(DB_PATH)
+    try:
+        cursor = connection.cursor()
+        cursor.execute(query, [str(doc_id) for doc_id in doc_ids])
+        return {str(doc_id): title for doc_id, title in cursor.fetchall()}
+    finally:
+        connection.close()
+
+
+def compute_evaluation_metrics(results, relevant_docs, top_k):
+    top_results = results[:top_k]
+    relevant_scores = {str(item['doc_id']): float(item['score']) for item in relevant_docs}
+    relevant_set = set(relevant_scores)
+
+    hits = 0
+    precision_sum = 0.0
+    dcg = 0.0
+
+    for index, item in enumerate(top_results, start=1):
+        doc_id = str(item['doc_id'])
+        if doc_id in relevant_set:
+            hits += 1
+            precision_sum += hits / index
+            relevance = relevant_scores.get(doc_id, 0.0)
+            dcg += (2 ** relevance - 1) / np.log2(index + 1)
+
+    ideal_scores = sorted(relevant_scores.values(), reverse=True)[:top_k]
+    idcg = sum((2 ** score - 1) / np.log2(index + 2) for index, score in enumerate(ideal_scores))
+
+    precision_at_k = hits / top_k if top_k else 0.0
+    map_score = precision_sum / len(relevant_set) if relevant_set else 0.0
+    ndcg = dcg / idcg if idcg > 0 else 0.0
+
+    return {
+        'precision_at_k': round(float(precision_at_k), 6),
+        'map': round(float(map_score), 6),
+        'ndcg': round(float(ndcg), 6),
+    }
+
+
+def build_evaluation_payload(results, query_id, top_k, preprocessing):
+    relevant_docs = get_qrels_for_query(query_id)
+    relevant_doc_ids = {item['doc_id'] for item in relevant_docs}
+    title_map = get_document_titles([item['doc_id'] for item in relevant_docs] + [item['doc_id'] for item in results])
+
+    for item in results:
+        doc_id = str(item['doc_id'])
+        item['relevant'] = doc_id in relevant_doc_ids
+        item['relevance_score'] = next((rel['score'] for rel in relevant_docs if rel['doc_id'] == doc_id), 0.0)
+
+    missing_relevant_docs = []
+    result_doc_ids = {str(item['doc_id']) for item in results}
+    for item in relevant_docs:
+        if item['doc_id'] not in result_doc_ids:
+            missing_relevant_docs.append(
+                {
+                    'doc_id': item['doc_id'],
+                    'title': title_map.get(item['doc_id'], ''),
+                    'score': item['score'],
+                }
+            )
+
+    metrics = compute_evaluation_metrics(results, relevant_docs, top_k)
+    return {
+        'results': results,
+        'query_id': str(query_id),
+        'relevant_docs': relevant_docs,
+        'missing_relevant_docs': missing_relevant_docs,
+        'metrics': metrics,
+        'preprocessing': preprocessing,
+    }
+
+
+def run_tfidf_search(query, top_k, preprocessing='stemming'):
+    assets = get_search_assets(preprocessing)
+    results = search_tfidf(query, assets, top_k)
+    doc_id_list = [item['doc_id'] for item in results]
+    texts = get_documents_texts(doc_id_list)
+    for item in results:
+        item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
+    return results
+
+
 @lru_cache(maxsize=128)
 def get_document_text_cached(doc_id):
     jsonl_path = DOCUMENTS_JSONL_PATH
@@ -313,10 +493,12 @@ def api_search():
     try:
         data = request.get_json() or {}
         query = data.get('query', '')
+        query_id = data.get('query_id', '')
         model = data.get('model', 'tfidf')
         top_k = int(data.get('top_k', 10))
         refine = bool(data.get('refine', False))
         preprocessing = data.get('preprocessing', 'stemming')
+        evaluate = bool(data.get('evaluate', False))
 
         if not query.strip():
             return jsonify({'error': 'Query is required.'}), 400
@@ -324,22 +506,20 @@ def api_search():
         if refine:
             query = refine_query_text(query)['expanded']
 
-        cache_key = (query, model, top_k, preprocessing)
+        if evaluate and not str(query_id).strip():
+            return jsonify({'error': 'query_id is required when evaluation is enabled.'}), 400
+
+        cache_key = (query, str(query_id), model, top_k, preprocessing, evaluate)
         if cache_key in QUERY_CACHE:
             return jsonify(QUERY_CACHE[cache_key])
-
-        assets = get_search_assets(preprocessing)
 
         if model != 'tfidf':
             return jsonify({'error': f'Model {model} not available in this backend. Use tfidf.'}), 400
 
-        results = search_tfidf(query, assets, top_k)
-        doc_id_list = [item['doc_id'] for item in results]
-        texts = get_documents_texts(doc_id_list)
-        for item in results:
-            item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
-
-        payload = {'results': results, 'model': model, 'query': query, 'preprocessing': preprocessing}
+        results = run_tfidf_search(query, top_k, preprocessing)
+        payload = {'results': results, 'model': model, 'query': query, 'query_id': str(query_id), 'preprocessing': preprocessing}
+        if evaluate:
+            payload.update(build_evaluation_payload(results, query_id, top_k, preprocessing))
         QUERY_CACHE[cache_key] = payload
         return jsonify(payload)
     except Exception as e:
@@ -359,5 +539,6 @@ def api_queries():
 if __name__ == '__main__':
     init_sqlite_documents()
     init_sqlite_queries()
+    init_sqlite_qrels()
     print('Server starting...')
     app.run(debug=False, host='0.0.0.0', port=5000)
