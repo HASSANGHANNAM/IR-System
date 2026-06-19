@@ -14,13 +14,38 @@
             <div class="brand">IR-System</div>
             <nav class="nav-links">
                 <button class="nav-link active" data-target="searchPage">Search</button>
-                <button class="nav-link" data-target="evaluationPage">Evaluation</button>
+                <button class="nav-link" data-target="aboutPage">About</button>
             </nav>
         </header>
 
+        <!-- ===== شريط البحث العلوي ===== -->
+        <div class="top-search-bar">
+            <div class="search-row">
+                <div class="field-group query-group">
+                    <label for="query">Query</label>
+                    <div class="query-row">
+                        <input id="query" type="text" placeholder="Enter search query...">
+                        <button id="clearQueryBtn" class="clear-btn" type="button">✕</button>
+                        <button id="dropdownToggleBtn" class="dropdown-toggle-btn" type="button"
+                            title="Saved Queries">▼</button>
+                        <select id="querySelect" class="hidden-select">
+                            <option value="">-- Select a saved query --</option>
+                        </select>
+                    </div>
+                </div>
+                <button id="searchBtn" class="primary-button compact-btn" type="button">
+                    <span class="search-icon">🔍</span>
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== المحتوى الرئيسي ===== -->
         <main class="page-wrapper">
             <section id="searchPage" class="page-section active">
                 <div class="content-grid">
+
+                    <!-- العمود الأيسر -->
                     <aside class="left-panel">
                         <div class="panel-card">
                             <div class="panel-header">
@@ -30,19 +55,6 @@
                                 <label for="dataset">Dataset</label>
                                 <select id="dataset">
                                     <option value="beir/webis-touche2020">beir/webis-touche2020</option>
-                                </select>
-                            </div>
-                            <div class="field-group input-with-clear">
-                                <label for="query">Query</label>
-                                <div class="query-row">
-                                    <input id="query" type="text" placeholder="Enter search query...">
-                                    <button id="clearQueryBtn" class="clear-btn" type="button">×</button>
-                                </div>
-                            </div>
-                            <div class="field-group">
-                                <label for="querySelect">Saved Queries</label>
-                                <select id="querySelect">
-                                    <option value="">Loading queries...</option>
                                 </select>
                             </div>
                             <div class="field-group">
@@ -58,10 +70,6 @@
                                 <label for="top_k">Top-K</label>
                                 <input id="top_k" type="number" min="1" max="20" value="10">
                             </div>
-                            <button id="searchBtn" class="primary-button" type="button">
-                                <span class="search-icon">🔍</span>
-                                Search
-                            </button>
                         </div>
 
                         <div class="panel-card settings-card">
@@ -81,27 +89,63 @@
                                     <option value="lemmatization">Lemmatization</option>
                                 </select>
                             </div>
+                            <div class="field-group checkbox-row">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="evalToggle">
+                                    Show Evaluation (vs qrels)
+                                </label>
+                            </div>
                         </div>
                     </aside>
 
-                    <section class="right-panel">
+                    <!-- العمود الأوسط: النتائج -->
+                    <section class="center-panel">
                         <div class="panel-card results-panel">
                             <div class="panel-header">
                                 <h2>Search Results</h2>
+                                <span id="resultCount" class="result-count">0</span>
                             </div>
-                            <div id="resultsGrid" class="results-grid"></div>
+                            <div id="resultsGrid" class="results-grid">
+                                <div class="empty-state">
+                                    <span>🔍</span>
+                                    <p>Search for documents here</p>
+                                </div>
+                            </div>
                         </div>
                     </section>
+
+                    <!-- العمود الأيمن: التقييم -->
+                    <div class="right-panel" id="evaluationPanel" style="display: none;">
+                        <div class="panel-card evaluation-panel">
+                            <div class="panel-header">
+                                <h2>📊 Evaluation Panel</h2>
+                            </div>
+                            <div id="metricsContainer" class="metrics-container">
+                                <div class="metric-card"><strong>Precision@K</strong><span id="precisionValue">0%</span>
+                                </div>
+                                <div class="metric-card"><strong>MAP</strong><span id="mapValue">0%</span></div>
+                                <div class="metric-card"><strong>NDCG</strong><span id="ndcgValue">0%</span></div>
+                            </div>
+                            <div id="missingDocsContainer" class="missing-docs-container">
+                                <h4>📋 Missing Relevant Docs</h4>
+                                <div id="missingDocsList">قم بالبحث لتظهر نتائج التقييم</div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </section>
 
-            <section id="evaluationPage" class="page-section">
+            <section id="aboutPage" class="page-section">
                 <div class="panel-card overview-card">
                     <div class="panel-header">
-                        <h2>Evaluation</h2>
+                        <h2>About</h2>
                     </div>
                     <div class="summary-box">
-                        <p>هذه الصفحة مخصصة لعرض مؤشرات التقييم والمعلومات الخاصة بنتائج البحث.</p>
+                        <p>This is the IR-System search engine built for the Information Retrieval course project.</p>
+                        <p>Dataset: beir/webis-touche2020 (382,545 documents, 49 queries).</p>
+                        <p>Model: TF-IDF with Stemming preprocessing.</p>
+                        <p>Developed with Flask, SQLite, and NLTK.</p>
                     </div>
                 </div>
             </section>
