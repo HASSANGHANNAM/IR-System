@@ -14,6 +14,7 @@ from scipy import sparse
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
+from rank_bm25 import BM25Okapi  # 🔥 إضافة BM25
 
 ROOT = Path(__file__).resolve().parent
 UI_DIR = ROOT / 'UI'
@@ -37,6 +38,8 @@ embeddings_title_norm = None
 embeddings_text_norm = None
 doc_ids_list = []
 bert_loaded = False
+bm25_model = None          # 🔥 BM25 model
+bm25_doc_ids = []          # 🔥 BM25 doc IDs
 STOPWORDS = set(stopwords.words('english'))
 STEMMER = PorterStemmer()
 
@@ -96,7 +99,7 @@ def load_bert_resources():
         doc_ids_list = load_doc_ids()
 
     bert_loaded = True
-    print('✅ تم تحميل BERT مع تطبيع المتجهات')
+    print('✅ تم تحميل BERT مع تطبيع المتجهات (تم التحميل عند أول طلب)')
 
 
 def load_text_matrix():
@@ -399,6 +402,41 @@ def search_bert(query, top_k=10, use_title=True, alpha=0.3):
     ]
 
 
+# ======================== BM25 ========================
+def load_bm25_model():
+    global bm25_model, bm25_doc_ids
+    model_path = MODELS_DIR / 'bm25_model.pkl'
+    if not model_path.exists():
+        print('⚠️ BM25 model not found in models/')
+        return False
+    with open(model_path, 'rb') as f:
+        data = pickle.load(f)
+        bm25_model = data['bm25']
+        bm25_doc_ids = data['doc_ids']
+    print(f'✅ تم تحميل نموذج BM25 ({len(bm25_doc_ids)} وثيقة) (تم التحميل عند أول طلب)')
+    return True
+
+
+def search_bm25(query, top_k=10):
+    global bm25_model, bm25_doc_ids
+    if bm25_model is None:
+        if not load_bm25_model():
+            raise ValueError('BM25 model not loaded')
+    cleaned_query = clean_query(query)
+    tokenized_query = cleaned_query.split()
+    scores = bm25_model.get_scores(tokenized_query)
+    top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
+    results = []
+    for idx in top_indices:
+        if idx < len(bm25_doc_ids):
+            results.append({
+                'doc_id': bm25_doc_ids[idx],
+                'score': float(scores[idx])
+            })
+    return results
+# ======================================================
+
+
 def get_documents_texts(doc_ids):
     if not doc_ids:
         return {}
@@ -605,6 +643,11 @@ def api_search():
             texts = get_documents_texts([item['doc_id'] for item in results])
             for item in results:
                 item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
+        elif model == 'bm25':
+            results = search_bm25(query, top_k)
+            texts = get_documents_texts([item['doc_id'] for item in results])
+            for item in results:
+                item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
         else:
             return jsonify({'error': f'Model {model} not available in this backend.'}), 400
 
@@ -631,6 +674,7 @@ if __name__ == '__main__':
     init_sqlite_documents()
     init_sqlite_queries()
     init_sqlite_qrels()
-    load_bert_resources()
-    print('Server starting...')
+    # load_bert_resources()   # 🔥 تم التعليق: سيتم التحميل عند أول طلب BERT
+    # load_bm25_model()       # 🔥 تم التعليق: سيتم التحميل عند أول طلب BM25
+    print('Server starting... (BERT and BM25 will load on first use)')
     app.run(debug=False, host='0.0.0.0', port=5000)
