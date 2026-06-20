@@ -9,6 +9,7 @@ import unicodedata
 from functools import lru_cache
 
 import numpy as np
+from sentence_transformers import SentenceTransformer
 from scipy import sparse
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
@@ -31,6 +32,11 @@ app = Flask(__name__, static_folder=str(UI_DIR), static_url_path='')
 
 CACHE = {}
 QUERY_CACHE = {}
+bert_model = None
+embeddings_title_norm = None
+embeddings_text_norm = None
+doc_ids_list = []
+bert_loaded = False
 STOPWORDS = set(stopwords.words('english'))
 STEMMER = PorterStemmer()
 
@@ -47,6 +53,50 @@ def load_pickle(path):
 
 def load_npz(path):
     return sparse.load_npz(path)
+
+
+def load_bert_resources():
+    global bert_model
+    global embeddings_title_norm
+    global embeddings_text_norm
+    global doc_ids_list
+    global bert_loaded
+
+    if bert_loaded and bert_model is not None and embeddings_text_norm is not None and doc_ids_list:
+        return
+
+    if bert_model is None:
+        local_model_path = MODELS_DIR / 'bert_model'
+        if local_model_path.exists():
+            bert_model = SentenceTransformer(str(local_model_path))
+            print('✅ تم تحميل BERT من المجلد المحلي')
+        else:
+            print('⚠️ النموذج المحلي غير موجود، يتم التحميل من Hugging Face...')
+            bert_model = SentenceTransformer('all-MiniLM-L6-v2')
+            bert_model.save(str(local_model_path))
+            print('✅ تم حفظ BERT في المجلد المحلي للمستقبل')
+
+    if embeddings_text_norm is None:
+        text_embeddings_path = MODELS_DIR / 'embeddings_text.npy'
+        if not text_embeddings_path.exists():
+            raise FileNotFoundError('embeddings_text.npy not found in models/')
+        embeddings_text = np.load(text_embeddings_path, mmap_mode='r')
+        norms_text = np.linalg.norm(embeddings_text, axis=1, keepdims=True)
+        norms_text = np.where(norms_text == 0, 1.0, norms_text)
+        embeddings_text_norm = embeddings_text / norms_text
+
+    title_embeddings_path = MODELS_DIR / 'embeddings_title.npy'
+    if title_embeddings_path.exists() and embeddings_title_norm is None:
+        embeddings_title = np.load(title_embeddings_path, mmap_mode='r')
+        norms_title = np.linalg.norm(embeddings_title, axis=1, keepdims=True)
+        norms_title = np.where(norms_title == 0, 1.0, norms_title)
+        embeddings_title_norm = embeddings_title / norms_title
+
+    if not doc_ids_list:
+        doc_ids_list = load_doc_ids()
+
+    bert_loaded = True
+    print('✅ تم تحميل BERT مع تطبيع المتجهات')
 
 
 def load_text_matrix():
@@ -315,6 +365,40 @@ def search_tfidf(query, assets, top_k):
     return results
 
 
+def search_bert(query, top_k=10, use_title=True, alpha=0.3):
+    global bert_model
+    global embeddings_title_norm
+    global embeddings_text_norm
+    global doc_ids_list
+
+    if bert_model is None or embeddings_text_norm is None:
+        load_bert_resources()
+
+    cleaned_query = clean_query(query)
+    query_vec = bert_model.encode([cleaned_query])[0]
+    query_norm = np.linalg.norm(query_vec)
+    if query_norm != 0:
+        query_vec = query_vec / query_norm
+
+    if use_title and embeddings_title_norm is not None:
+        title_scores = np.dot(query_vec, embeddings_title_norm.T)
+        text_scores = np.dot(query_vec, embeddings_text_norm.T)
+        scores = alpha * title_scores + (1.0 - alpha) * text_scores
+    else:
+        matrix = embeddings_title_norm if use_title and embeddings_title_norm is not None else embeddings_text_norm
+        scores = np.dot(query_vec, matrix.T)
+
+    top_indices = np.argsort(scores)[::-1][:top_k]
+    return [
+        {
+            'doc_id': doc_ids_list[idx] if idx < len(doc_ids_list) else str(idx),
+            'score': float(scores[idx]),
+        }
+        for idx in top_indices
+        if scores[idx] > 0
+    ]
+
+
 def get_documents_texts(doc_ids):
     if not doc_ids:
         return {}
@@ -513,10 +597,17 @@ def api_search():
         if cache_key in QUERY_CACHE:
             return jsonify(QUERY_CACHE[cache_key])
 
-        if model != 'tfidf':
-            return jsonify({'error': f'Model {model} not available in this backend. Use tfidf.'}), 400
+        if model == 'tfidf':
+            results = run_tfidf_search(query, top_k, preprocessing)
+        elif model == 'bert':
+            load_bert_resources()
+            results = search_bert(query, top_k=top_k, use_title=True, alpha=0.4)
+            texts = get_documents_texts([item['doc_id'] for item in results])
+            for item in results:
+                item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
+        else:
+            return jsonify({'error': f'Model {model} not available in this backend.'}), 400
 
-        results = run_tfidf_search(query, top_k, preprocessing)
         payload = {'results': results, 'model': model, 'query': query, 'query_id': str(query_id), 'preprocessing': preprocessing}
         if evaluate:
             payload.update(build_evaluation_payload(results, query_id, top_k, preprocessing))
@@ -540,5 +631,6 @@ if __name__ == '__main__':
     init_sqlite_documents()
     init_sqlite_queries()
     init_sqlite_qrels()
+    load_bert_resources()
     print('Server starting...')
     app.run(debug=False, host='0.0.0.0', port=5000)
