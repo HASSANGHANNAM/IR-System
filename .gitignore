@@ -1,17 +1,56 @@
-*.zip
-*.npz
-*.pkl
-*.jsonl
+# ===== Python =====
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.so
+
+# ===== Virtual Environment =====
 venv/
 .venv/
+env/
+ENV/
+env.bak/
+venv.bak/
 
+# ===== IDE =====
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
 
-ir_data.db
+# ===== Project Data (ضخمة أو مؤقتة) =====
 *.db
+ir_data.db
+*.sqlite3
+*.sqlite
+
+# ===== Models & Embeddings (ضخمة جداً) =====
+*.npy
 *.npz
 *.pkl
-*.zip
-*.jsonl
+*.joblib
+*.h5
+*.pb
+*.onnx
 
+# ===== Datasets (ضخمة) =====
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.jsonl
+*.jsonl.gz
+*.csv
+*.tsv
+
+# ===== Logs & Cache =====
+*.log
+*.tmp
+*.temp
+.cache/
+.nltk_data/
+huggingface_cache/
+models/
