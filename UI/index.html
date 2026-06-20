@@ -66,6 +66,90 @@
                                     <option value="hybrid">Hybrid</option>
                                 </select>
                             </div>
+
+                            <!-- ===== قسم Hybrid ===== -->
+                            <div id="hybridConfig"
+                                style="display: none; margin-top: 15px; padding: 12px; border: 1px solid rgba(125, 90, 255, 0.2); border-radius: 8px; background: rgba(20, 28, 58, 0.95);">
+
+                                <!-- عنوان + Mode في سطر واحد -->
+                                <div
+                                    style="display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px;">
+                                    <h4 style="margin: 0; color: #c5d2ff; font-size: 1rem;">🔀 Hybrid Search
+                                        Configuration</h4>
+                                    <div class="field-group" style="margin: 0; flex: 0 0 auto;">
+                                        <label for="hybridMode" style="font-size: 0.7rem; color: #9ab4ff;">Mode</label>
+                                        <select id="hybridMode"
+                                            style="padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(106, 114, 255, 0.2); background: rgba(10, 14, 26, 0.95); color: #eef2ff;">
+                                            <option value="parallel">Parallel</option>
+                                            <option value="serial">Serial</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <hr style="margin: 8px 0; border-color: rgba(106, 114, 255, 0.15);">
+
+                                <!-- الأوزان (الاسم + الحقل في نفس السطر) -->
+                                <div id="weightsSection">
+                                    <h5 style="margin: 8px 0 4px 0; color: #c5d2ff;">Model Weights</h5>
+                                    <p style="font-size: 13px; color: #8899bb; margin: 0 0 8px 0;">
+                                        Set weights for each model. Use 0 to exclude a model. Weights are automatically
+                                        normalized.
+                                    </p>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 12px 20px; margin-bottom: 8px;">
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <label
+                                                style="font-weight: 600; color: #c5d2ff; font-size: 0.9rem; min-width: 55px;">TF-IDF</label>
+                                            <input type="number" id="wTfidf" value="0.33" step="0.01" min="0" max="1"
+                                                style="width: 65px; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(106, 114, 255, 0.2); background: rgba(10, 14, 26, 0.95); color: #eef2ff; text-align: center;">
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <label
+                                                style="font-weight: 600; color: #c5d2ff; font-size: 0.9rem; min-width: 55px;">BERT</label>
+                                            <input type="number" id="wBert" value="0.33" step="0.01" min="0" max="1"
+                                                style="width: 65px; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(106, 114, 255, 0.2); background: rgba(10, 14, 26, 0.95); color: #eef2ff; text-align: center;">
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 6px;">
+                                            <label
+                                                style="font-weight: 600; color: #c5d2ff; font-size: 0.9rem; min-width: 55px;">BM25</label>
+                                            <input type="number" id="wBm25" value="0.34" step="0.01" min="0" max="1"
+                                                style="width: 65px; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(106, 114, 255, 0.2); background: rgba(10, 14, 26, 0.95); color: #eef2ff; text-align: center;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- الإعدادات السريعة (الأزرار) -->
+                                <div style="margin: 10px 0;">
+                                    <h5 style="margin: 0 0 4px 0; color: #c5d2ff;">Quick Presets</h5>
+                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                        <button type="button" id="presetEqual" onclick="setPreset('equal')"
+                                            style="flex: 1; min-width: 120px; padding: 6px 12px; background: #2a3a5c; color: #eef2ff; border: 1px solid rgba(106, 114, 255, 0.3); border-radius: 999px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;">
+                                            ⚖️ All Models Equal
+                                        </button>
+                                        <button type="button" id="presetBest" onclick="setPreset('best')"
+                                            style="flex: 1; min-width: 120px; padding: 6px 12px; background: #2a3a5c; color: #eef2ff; border: 1px solid rgba(106, 114, 255, 0.3); border-radius: 999px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;">
+                                            🏆 The Best
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- رسالة Serial (تظهر أسفل الأزرار) -->
+                                <div id="serialNote"
+                                    style="display: none; margin-top: 8px; padding: 8px 12px; background: rgba(255, 193, 7, 0.12); border: 1px solid rgba(255, 193, 7, 0.2); border-radius: 6px; color: #ffd966; font-size: 13px;">
+                                    ⚠️ <strong>Serial Mode:</strong> Weights are not used. Ranking is performed
+                                    sequentially (e.g., BM25 → BERT).
+                                </div>
+
+                                <!-- How it works (بنفس خلفية الرسالة ولكن أفتح) -->
+                                <div
+                                    style="margin-top: 10px; padding: 10px; background: rgba(255, 193, 7, 0.06); border: 1px solid rgba(255, 193, 7, 0.08); border-radius: 6px; font-size: 13px; color: #aab8cc;">
+                                    <strong>How it works:</strong><br>
+                                    • Set weight to 0 to exclude a model<br>
+                                    • Weights are automatically normalized to sum to 1<br>
+                                    • All models use the same preprocessing and ranking as individual models
+                                </div>
+                            </div>
+                            <!-- ===== نهاية قسم Hybrid ===== -->
+
                             <div class="field-group">
                                 <label for="top_k">Top-K</label>
                                 <input id="top_k" type="number" min="1" max="20" value="10">
@@ -98,7 +182,7 @@
                         </div>
                     </aside>
 
-                    <!-- العمود الأوسط: النتائج -->
+                    <!-- العمود الأوسط -->
                     <section class="center-panel">
                         <div class="panel-card results-panel">
                             <div class="panel-header">
@@ -114,7 +198,7 @@
                         </div>
                     </section>
 
-                    <!-- العمود الأيمن: التقييم -->
+                    <!-- العمود الأيمن -->
                     <div class="right-panel" id="evaluationPanel" style="display: none;">
                         <div class="panel-card evaluation-panel">
                             <div class="panel-header">
@@ -151,6 +235,7 @@
             </section>
         </main>
     </div>
+
     <script src="script.js"></script>
 </body>
 

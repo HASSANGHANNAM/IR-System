@@ -1,5 +1,6 @@
 console.log('✅ script.js loaded');
 
+// ===== عناصر DOM =====
 const datasetSelect = document.getElementById('dataset');
 const queryInput = document.getElementById('query');
 const modelSelect = document.getElementById('model');
@@ -17,6 +18,17 @@ const resultsGrid = document.getElementById('resultsGrid');
 const resultCount = document.getElementById('resultCount');
 const navButtons = document.querySelectorAll('.nav-link');
 const pageSections = document.querySelectorAll('.page-section');
+
+// ===== عناصر الـ Hybrid =====
+const hybridConfig = document.getElementById('hybridConfig');
+const hybridMode = document.getElementById('hybridMode');
+const wTfidf = document.getElementById('wTfidf');
+const wBert = document.getElementById('wBert');
+const wBm25 = document.getElementById('wBm25');
+const weightsSection = document.getElementById('weightsSection');
+const serialNote = document.getElementById('serialNote');
+const presetEqual = document.getElementById('presetEqual');
+const presetBest = document.getElementById('presetBest');
 
 let lastSearchResponse = null;
 let lastQueryId = null;
@@ -119,23 +131,109 @@ if (dropdownToggleBtn && querySelect) {
     });
 }
 
-// ===== Fetch Search =====
-const fetchSearch = async (query, query_id, model, top_k, refine, preprocessing, evaluate) => {
+// ===== دوال الـ Hybrid =====
+
+// إظهار/إخفاء قسم الـ Hybrid حسب النموذج المختار
+function toggleHybridConfig() {
+    if (modelSelect.value === 'hybrid') {
+        hybridConfig.style.display = 'block';
+    } else {
+        hybridConfig.style.display = 'none';
+    }
+}
+
+// تعطيل/تفعيل الأوزان والأزرار حسب وضع الـ Mode (Parallel / Serial)
+function toggleWeightsSection() {
+    const isSerial = hybridMode.value === 'serial';
+
+    // تعطيل/تفعيل الأوزان
+    weightsSection.style.opacity = isSerial ? '0.5' : '1';
+    weightsSection.style.pointerEvents = isSerial ? 'none' : 'auto';
+
+    // تعطيل/تفعيل أزرار الـ Presets
+    const presets = [presetEqual, presetBest];
+    presets.forEach(btn => {
+        if (isSerial) {
+            btn.disabled = true;
+            btn.style.opacity = '0.5';
+            btn.style.cursor = 'not-allowed';
+        } else {
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.style.cursor = 'pointer';
+        }
+    });
+
+    // إظهار/إخفاء رسالة Serial
+    serialNote.style.display = isSerial ? 'block' : 'none';
+}
+
+// تطبيع الأوزان (تشتت تلقائياً عند تغيير أي قيمة)
+function normalizeWeights() {
+    let a = parseFloat(wTfidf.value) || 0;
+    let b = parseFloat(wBert.value) || 0;
+    let c = parseFloat(wBm25.value) || 0;
+    let sum = a + b + c;
+    if (sum > 0) {
+        wTfidf.value = Math.round((a / sum) * 100) / 100;
+        wBert.value = Math.round((b / sum) * 100) / 100;
+        wBm25.value = Math.round((c / sum) * 100) / 100;
+    }
+}
+
+// ضبط الأوزان بالإعدادات السريعة
+function setPreset(type) {
+    if (type === 'equal') {
+        wTfidf.value = 0.33;
+        wBert.value = 0.33;
+        wBm25.value = 0.34;
+    } else if (type === 'best') {
+        wTfidf.value = 0.30;
+        wBert.value = 0.10;
+        wBm25.value = 0.60;
+    }
+    normalizeWeights();
+}
+
+// ربط الأحداث الخاصة بالـ Hybrid
+modelSelect.addEventListener('change', toggleHybridConfig);
+hybridMode.addEventListener('change', toggleWeightsSection);
+
+// ربط التطبيع عند تغيير أي من حقول الأوزان
+[wTfidf, wBert, wBm25].forEach(input => {
+    input.addEventListener('input', normalizeWeights);
+});
+
+// تشغيل الحالة الأولية
+toggleHybridConfig();
+toggleWeightsSection();
+
+// ===== Fetch Search (معدل لدعم الـ Hybrid) =====
+const fetchSearch = async (query, query_id, model, top_k, refine, preprocessing, evaluate, hybrid_mode, weights) => {
     try {
+        const body = {
+            query,
+            query_id,
+            model,
+            top_k,
+            refine,
+            preprocessing,
+            evaluate: evaluate || false,
+            dataset: datasetSelect.value,
+        };
+
+        // إضافة بيانات الـ Hybrid إن وُجدت
+        if (model === 'hybrid') {
+            body.hybrid_mode = hybrid_mode || 'parallel';
+            if (hybrid_mode === 'parallel' && weights) {
+                body.weights = weights;
+            }
+        }
+
         const response = await fetch('/api/search', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                query,
-                query_id,
-                model,
-                top_k,
-                refine,
-                preprocessing,
-                evaluate: evaluate || false,
-                dataset: datasetSelect.value,
-                weights: [0.33, 0.33, 0.34],
-            }),
+            body: JSON.stringify(body),
         });
         if (!response.ok) {
             const errorText = await response.text();
@@ -148,7 +246,7 @@ const fetchSearch = async (query, query_id, model, top_k, refine, preprocessing,
     }
 };
 
-// ===== Render Results (with Evaluation) =====
+// ===== Render Results (مع التقييم) =====
 const renderResults = (items, isEval) => {
     resultsGrid.innerHTML = '';
     if (!items || !items.length) {
@@ -257,7 +355,7 @@ const updateEvaluationPanel = (response) => {
     }
 };
 
-// ===== Handle Search =====
+// ===== Handle Search (معدل) =====
 searchBtn.addEventListener('click', async () => {
     const query = queryInput.value.trim();
     if (!query) {
@@ -274,7 +372,7 @@ searchBtn.addEventListener('click', async () => {
         return;
     }
 
-    // 🔥 التنبيه الفوري عند الضغط على زر البحث
+    // 🔥 التنبيه الفوري
     alert('🔍 Searching... Please wait.');
 
     const model = modelSelect.value;
@@ -282,8 +380,25 @@ searchBtn.addEventListener('click', async () => {
     const refine = refineToggle.checked;
     const preprocessing = preprocessMethod.value;
 
+    // جمع بيانات الـ Hybrid إن كان النموذج Hybrid
+    let hybrid_mode = null;
+    let weights = null;
+    if (model === 'hybrid') {
+        hybrid_mode = hybridMode.value;
+        if (hybrid_mode === 'parallel') {
+            weights = {
+                tfidf: parseFloat(wTfidf.value) || 0,
+                bert: parseFloat(wBert.value) || 0,
+                bm25: parseFloat(wBm25.value) || 0
+            };
+        }
+    }
+
     try {
-        const response = await fetchSearch(query, query_id, model, top_k, refine, preprocessing, evaluate);
+        const response = await fetchSearch(
+            query, query_id, model, top_k, refine, preprocessing, evaluate,
+            hybrid_mode, weights
+        );
 
         if (response.error) {
             resultsGrid.innerHTML = `
@@ -326,7 +441,7 @@ clearQueryBtn.addEventListener('click', () => {
     queryInput.focus();
 });
 
-// ===== Evaluation Toggle (instant show/hide) =====
+// ===== Evaluation Toggle =====
 if (evalToggle) {
     evalToggle.addEventListener('change', () => {
         if (evalToggle.checked) {
@@ -352,7 +467,7 @@ if (evalToggle) {
     });
 }
 
-// ===== Keyboard shortcut: Enter to search =====
+// ===== Keyboard shortcut =====
 queryInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
         searchBtn.click();
@@ -367,4 +482,4 @@ window.testEvaluation = async (query_id = '1') => {
     return response;
 };
 
-console.log('✅ IR-System ready.');
+console.log('✅ IR-System ready with Hybrid support.');

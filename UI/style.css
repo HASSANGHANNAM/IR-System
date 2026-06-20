@@ -596,6 +596,142 @@ body {
     margin-bottom: 0.5rem;
 }
 
+/* ============================================================
+   ===== تنسيقات الـ Hybrid النهائية (حسب طلبك) =====
+   ============================================================ */
+
+/* خلفية وحواف قسم الـ Hybrid */
+#hybridConfig {
+    background: rgba(20, 28, 58, 0.95) !important;
+    border: 1px solid rgba(125, 90, 255, 0.25) !important;
+    border-radius: 10px !important;
+    padding: 14px !important;
+}
+
+#hybridConfig h4 {
+    color: #c5d2ff;
+    font-size: 1rem;
+    margin: 0;
+}
+
+#hybridConfig h5 {
+    color: #c5d2ff;
+}
+
+/* حقول الإدخال في الـ Hybrid */
+#hybridConfig .field-group select,
+#hybridConfig input[type="number"] {
+    background: rgba(10, 14, 26, 0.95) !important;
+    border: 1px solid rgba(106, 114, 255, 0.25) !important;
+    color: #eef2ff !important;
+    border-radius: 6px !important;
+    padding: 4px 8px !important;
+}
+
+#hybridConfig input[type="number"]:focus {
+    outline: none;
+    border-color: rgba(106, 114, 255, 0.6) !important;
+}
+
+/* صفوف الأوزان (الاسم + الحقل في سطر واحد) */
+#weightsSection .weight-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+#weightsSection .weight-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#weightsSection .weight-item label {
+    font-weight: 600;
+    color: #c5d2ff;
+    font-size: 0.85rem;
+    min-width: 55px;
+}
+
+#weightsSection .weight-item input {
+    width: 65px;
+    padding: 4px 6px;
+    border-radius: 6px;
+    border: 1px solid rgba(106, 114, 255, 0.25);
+    background: rgba(10, 14, 26, 0.95);
+    color: #eef2ff;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* أزرار الـ Quick Presets */
+#hybridConfig .preset-btn {
+    flex: 1;
+    min-width: 120px;
+    padding: 6px 12px;
+    background: #2a3a5c;
+    color: #eef2ff;
+    border: 1px solid rgba(106, 114, 255, 0.3);
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s, transform 0.1s, opacity 0.2s;
+}
+
+#hybridConfig .preset-btn:not(:disabled):hover {
+    background: #3a4a7a !important;
+    transform: scale(1.02);
+}
+
+#hybridConfig .preset-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #1a1f2e !important;
+    border-color: #2a2f3e !important;
+    color: #6a7a8a !important;
+    transform: none !important;
+}
+
+/* حاوية الأزرار (جعلها بنفس الطول) */
+#hybridConfig .presets-container {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* رسالة Serial Mode */
+#serialNote {
+    display: none;
+    /* يتم التحكم بها عبر JavaScript */
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: rgba(255, 193, 7, 0.12) !important;
+    border: 1px solid rgba(255, 193, 7, 0.2) !important;
+    border-radius: 6px;
+    color: #ffd966 !important;
+    font-size: 13px;
+}
+
+/* نص How it works */
+#hybridConfig .how-it-works {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(255, 193, 7, 0.06) !important;
+    border: 1px solid rgba(255, 193, 7, 0.08) !important;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #aab8cc !important;
+}
+
+/* ============================================================
+   ===== نهاية تنسيقات الـ Hybrid =====
+   ============================================================ */
+
 /* ===== Responsive ===== */
 @media (max-width: 1024px) {
     .content-grid {
@@ -674,5 +810,21 @@ body {
     .query-row input {
         padding: 0.5rem 4rem 0.5rem 0.8rem;
         font-size: 0.9rem;
+    }
+
+    /* استجابة سريعة للـ Hybrid على الشاشات الصغيرة */
+    #weightsSection .weight-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+    }
+
+    #hybridConfig .presets-container {
+        flex-direction: column;
+    }
+
+    #hybridConfig .preset-btn {
+        min-width: unset;
+        width: 100%;
     }
 }
