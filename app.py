@@ -14,7 +14,7 @@ from scipy import sparse
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
-from rank_bm25 import BM25Okapi  # 🔥 إضافة BM25
+from rank_bm25 import BM25Okapi
 
 ROOT = Path(__file__).resolve().parent
 UI_DIR = ROOT / 'UI'
@@ -38,8 +38,8 @@ embeddings_title_norm = None
 embeddings_text_norm = None
 doc_ids_list = []
 bert_loaded = False
-bm25_model = None          # 🔥 BM25 model
-bm25_doc_ids = []          # 🔥 BM25 doc IDs
+bm25_model = None
+bm25_doc_ids = []
 STOPWORDS = set(stopwords.words('english'))
 STEMMER = PorterStemmer()
 
@@ -53,10 +53,8 @@ def load_pickle(path):
     with open(path, 'rb') as f:
         return pickle.load(f)
 
-
 def load_npz(path):
     return sparse.load_npz(path)
-
 
 def load_bert_resources():
     global bert_model
@@ -101,20 +99,17 @@ def load_bert_resources():
     bert_loaded = True
     print('✅ تم تحميل BERT مع تطبيع المتجهات (تم التحميل عند أول طلب)')
 
-
 def load_text_matrix():
     path = MODELS_DIR / 'tfidf_text_matrix.npz'
     if path.exists():
         return load_npz(path)
     return None
 
-
 def load_vectorizer():
     path = MODELS_DIR / 'tfidf_vectorizer.pkl'
     if path.exists():
         return load_pickle(path)
     return None
-
 
 def load_doc_ids():
     if DOCUMENTS_JSONL_PATH.exists():
@@ -147,7 +142,6 @@ def load_doc_ids():
         print('⚠️ تحذير: لم يتم العثور على معرفات حقيقية، سيتم استخدام أرقام الصفوف.')
         return [str(i) for i in range(matrix.shape[0])]
     return []
-
 
 def init_sqlite_documents():
     if not DOCUMENTS_JSONL_PATH.exists():
@@ -199,7 +193,6 @@ def init_sqlite_documents():
             print(f'✅ SQLite جاهز ويحتوي على {existing_count} وثيقة')
     finally:
         connection.close()
-
 
 def init_sqlite_queries():
     if not QUERIES_JSONL_PATH.exists():
@@ -254,7 +247,6 @@ def init_sqlite_queries():
             print(f'✅ SQLite queries جاهز ويحتوي على {existing_count} كويري')
     finally:
         connection.close()
-
 
 def init_sqlite_qrels():
     qrels_path = next((path for path in QRELS_PATHS if path.exists()), None)
@@ -312,7 +304,6 @@ def init_sqlite_qrels():
     finally:
         connection.close()
 
-
 def get_search_assets(preprocessing):
     key = preprocessing.lower() if preprocessing else 'stemming'
     if key in CACHE:
@@ -335,13 +326,11 @@ def get_search_assets(preprocessing):
     CACHE[key] = assets
     return assets
 
-
 def refine_query_text(query):
     tokens = [token.lower() for token in query.split() if token.strip()]
     expanded = tokens + [f'{token}_enhanced' for token in tokens[:3]]
     normalized = ' '.join(tokens)
     return {'normalized': normalized, 'expanded': ' '.join(expanded)}
-
 
 def clean_query(text):
     text = unicodedata.normalize('NFKC', text)
@@ -352,6 +341,176 @@ def clean_query(text):
     tokens = [STEMMER.stem(token) for token in tokens]
     return ' '.join(tokens)
 
+# ============================
+# دوال الحصول على درجات جميع الوثائق (للـ Hybrid)
+# ============================
+
+def get_all_tfidf_scores(query, assets):
+    vectorizer = assets['vectorizer']
+    cleaned_query = clean_query(query)
+    query_vec = vectorizer.transform([cleaned_query])
+    scores = query_vec.dot(assets['text_matrix_T']).toarray().flatten()
+    return scores
+
+def get_all_bm25_scores(query):
+    global bm25_model
+    if bm25_model is None:
+        load_bm25_model()
+    if bm25_model is None:
+        raise ValueError('BM25 model not loaded')
+    cleaned_query = clean_query(query)
+    tokenized_query = cleaned_query.split()
+    scores = np.array(bm25_model.get_scores(tokenized_query))
+    return scores
+
+def get_all_bert_scores(query):
+    global bert_model
+    global embeddings_text_norm
+    if bert_model is None or embeddings_text_norm is None:
+        load_bert_resources()
+    cleaned_query = clean_query(query)
+    query_vec = bert_model.encode([cleaned_query])[0]
+    query_norm = np.linalg.norm(query_vec)
+    if query_norm != 0:
+        query_vec = query_vec / query_norm
+    
+    # استخدام embeddings النصي بشكل أساسي للهجين (يمكن تعديله ليشمل العنوان لاحقاً)
+    scores = np.dot(query_vec, embeddings_text_norm.T)
+    return scores
+
+# ============================
+# دالة البحث الهجين الأساسية (معدلة)
+# ============================
+
+def search_hybrid(query, hybrid_mode, weights, top_k=10, preprocessing='stemming'):
+    """
+    hybrid_mode: 'parallel' أو 'serial'
+    weights: dict {'tfidf': 0.3, 'bert': 0.1, 'bm25': 0.6}
+    
+    Serial: تستخدم التسلسل الأمثل TF‑IDF → BM25 (بناءً على تجارب serial_permutations_results.json)
+    """
+    assets = get_search_assets(preprocessing)
+    all_doc_ids = assets['doc_ids']
+    total_docs = len(all_doc_ids)
+    
+    if hybrid_mode == 'parallel':
+        # 1. الحصول على درجات جميع النماذج المطلوبة (التي وزنها > 0)
+        scores_dict = {}
+        if weights.get('tfidf', 0) > 0:
+            scores_dict['tfidf'] = get_all_tfidf_scores(query, assets)
+        if weights.get('bm25', 0) > 0:
+            scores_dict['bm25'] = get_all_bm25_scores(query)
+        if weights.get('bert', 0) > 0:
+            scores_dict['bert'] = get_all_bert_scores(query)
+        
+        if not scores_dict:
+            raise ValueError('At least one model must have weight > 0')
+        
+        # 2. تطبيع Min-Max لكل نموذج على حدة
+        def normalize(scores):
+            min_s = np.min(scores)
+            max_s = np.max(scores)
+            if max_s - min_s == 0:
+                return np.zeros_like(scores)
+            return (scores - min_s) / (max_s - min_s)
+        
+        norm_scores = {}
+        for name, scores in scores_dict.items():
+            norm_scores[name] = normalize(scores)
+        
+        # 3. الدمج المرجح (Weighted Sum)
+        final_scores = np.zeros(total_docs)
+        for name, scores in norm_scores.items():
+            final_scores += weights[name] * scores
+        
+        # 4. الترتيب
+        top_indices = np.argsort(final_scores)[::-1][:top_k]
+        results = []
+        for idx in top_indices:
+            if idx < len(all_doc_ids):
+                results.append({
+                    'doc_id': all_doc_ids[idx],
+                    'score': float(final_scores[idx])
+                })
+        return results
+    
+    elif hybrid_mode == 'serial':
+        # ============================================================
+        # 🔥 التسلسل الأمثل حسب تجارب serial_permutations_results.json:
+        #    المرحلة 1: TF‑IDF (Retriever) ← يسترجع أول 100 وثيقة
+        #    المرحلة 2: BM25 (Re-ranker) ← يعيد ترتيبها
+        # ============================================================
+        
+        # المرحلة 1: استرجاع أول 100 وثيقة باستخدام TF‑IDF
+        tfidf_scores = get_all_tfidf_scores(query, assets)
+        initial_k = min(100, total_docs)
+        top_tfidf_indices = np.argsort(tfidf_scores)[::-1][:initial_k]
+        
+        if len(top_tfidf_indices) == 0:
+            return []
+        
+        # المرحلة 2: إعادة ترتيب هذه الوثائق باستخدام BM25
+        # نستخرج درجات BM25 للوثائق المسترجعة فقط (لتوفير الوقت)
+        all_bm25_scores = get_all_bm25_scores(query)
+        bm25_scores_subset = all_bm25_scores[top_tfidf_indices]
+        
+        # نرتب تنازلياً حسب درجات BM25
+        reranked_order = np.argsort(bm25_scores_subset)[::-1][:top_k]
+        
+        # نستخرج النتائج النهائية
+        final_indices = top_tfidf_indices[reranked_order]
+        final_scores = bm25_scores_subset[reranked_order]
+        
+        results = []
+        for idx, score in zip(final_indices, final_scores):
+            if idx < len(all_doc_ids):
+                results.append({
+                    'doc_id': all_doc_ids[idx],
+                    'score': float(score)
+                })
+        return results
+    
+    else:
+        raise ValueError("Invalid hybrid_mode. Must be 'parallel' or 'serial'")
+
+# ============================
+# دوال BM25 الأساسية (للبحث العادي)
+# ============================
+
+def load_bm25_model():
+    global bm25_model, bm25_doc_ids
+    model_path = MODELS_DIR / 'bm25_model.pkl'
+    if not model_path.exists():
+        print('⚠️ BM25 model not found in models/')
+        return False
+    with open(model_path, 'rb') as f:
+        data = pickle.load(f)
+        bm25_model = data['bm25']
+        bm25_doc_ids = data['doc_ids']
+    print(f'✅ تم تحميل نموذج BM25 ({len(bm25_doc_ids)} وثيقة) (تم التحميل عند أول طلب)')
+    return True
+
+def search_bm25(query, top_k=10):
+    global bm25_model, bm25_doc_ids
+    if bm25_model is None:
+        if not load_bm25_model():
+            raise ValueError('BM25 model not loaded')
+    cleaned_query = clean_query(query)
+    tokenized_query = cleaned_query.split()
+    scores = bm25_model.get_scores(tokenized_query)
+    top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
+    results = []
+    for idx in top_indices:
+        if idx < len(bm25_doc_ids):
+            results.append({
+                'doc_id': bm25_doc_ids[idx],
+                'score': float(scores[idx])
+            })
+    return results
+
+# ============================
+# دوال البحث العادية (TF-IDF, BERT)
+# ============================
 
 def search_tfidf(query, assets, top_k):
     vectorizer = assets['vectorizer']
@@ -366,7 +525,6 @@ def search_tfidf(query, assets, top_k):
             doc_id = doc_ids[idx] if idx < len(doc_ids) else str(idx)
             results.append({'doc_id': doc_id, 'score': float(score)})
     return results
-
 
 def search_bert(query, top_k=10, use_title=True, alpha=0.3):
     global bert_model
@@ -401,46 +559,13 @@ def search_bert(query, top_k=10, use_title=True, alpha=0.3):
         if scores[idx] > 0
     ]
 
-
-# ======================== BM25 ========================
-def load_bm25_model():
-    global bm25_model, bm25_doc_ids
-    model_path = MODELS_DIR / 'bm25_model.pkl'
-    if not model_path.exists():
-        print('⚠️ BM25 model not found in models/')
-        return False
-    with open(model_path, 'rb') as f:
-        data = pickle.load(f)
-        bm25_model = data['bm25']
-        bm25_doc_ids = data['doc_ids']
-    print(f'✅ تم تحميل نموذج BM25 ({len(bm25_doc_ids)} وثيقة) (تم التحميل عند أول طلب)')
-    return True
-
-
-def search_bm25(query, top_k=10):
-    global bm25_model, bm25_doc_ids
-    if bm25_model is None:
-        if not load_bm25_model():
-            raise ValueError('BM25 model not loaded')
-    cleaned_query = clean_query(query)
-    tokenized_query = cleaned_query.split()
-    scores = bm25_model.get_scores(tokenized_query)
-    top_indices = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:top_k]
-    results = []
-    for idx in top_indices:
-        if idx < len(bm25_doc_ids):
-            results.append({
-                'doc_id': bm25_doc_ids[idx],
-                'score': float(scores[idx])
-            })
-    return results
-# ======================================================
-
+# ============================
+# دوال مساعدة للبيانات والتقييم
+# ============================
 
 def get_documents_texts(doc_ids):
     if not doc_ids:
         return {}
-
     placeholders = ','.join(['?'] * len(doc_ids))
     query = f'SELECT doc_id, text FROM documents WHERE doc_id IN ({placeholders})'
     connection = sqlite3.connect(DB_PATH)
@@ -450,7 +575,6 @@ def get_documents_texts(doc_ids):
         return {str(doc_id): text for doc_id, text in cursor.fetchall()}
     finally:
         connection.close()
-
 
 def get_queries_from_db():
     connection = sqlite3.connect(DB_PATH)
@@ -471,7 +595,6 @@ def get_queries_from_db():
     finally:
         connection.close()
 
-
 def get_query_text_by_id(query_id):
     connection = sqlite3.connect(DB_PATH)
     try:
@@ -481,7 +604,6 @@ def get_query_text_by_id(query_id):
         return row[0] if row else None
     finally:
         connection.close()
-
 
 def get_qrels_for_query(query_id):
     connection = sqlite3.connect(DB_PATH)
@@ -495,11 +617,9 @@ def get_qrels_for_query(query_id):
     finally:
         connection.close()
 
-
 def get_document_titles(doc_ids):
     if not doc_ids:
         return {}
-
     placeholders = ','.join(['?'] * len(doc_ids))
     query = f'SELECT doc_id, title FROM documents WHERE doc_id IN ({placeholders})'
     connection = sqlite3.connect(DB_PATH)
@@ -509,7 +629,6 @@ def get_document_titles(doc_ids):
         return {str(doc_id): title for doc_id, title in cursor.fetchall()}
     finally:
         connection.close()
-
 
 def compute_evaluation_metrics(results, relevant_docs, top_k):
     top_results = results[:top_k]
@@ -540,7 +659,6 @@ def compute_evaluation_metrics(results, relevant_docs, top_k):
         'map': round(float(map_score), 6),
         'ndcg': round(float(ndcg), 6),
     }
-
 
 def build_evaluation_payload(results, query_id, top_k, preprocessing):
     relevant_docs = get_qrels_for_query(query_id)
@@ -574,41 +692,13 @@ def build_evaluation_payload(results, query_id, top_k, preprocessing):
         'preprocessing': preprocessing,
     }
 
-
-def run_tfidf_search(query, top_k, preprocessing='stemming'):
-    assets = get_search_assets(preprocessing)
-    results = search_tfidf(query, assets, top_k)
-    doc_id_list = [item['doc_id'] for item in results]
-    texts = get_documents_texts(doc_id_list)
-    for item in results:
-        item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
-    return results
-
-
-@lru_cache(maxsize=128)
-def get_document_text_cached(doc_id):
-    jsonl_path = DOCUMENTS_JSONL_PATH
-    if not jsonl_path.exists():
-        return 'نص الوثيقة غير متوفر (الملف غير موجود)'
-    try:
-        with open(jsonl_path, 'r', encoding='utf-8') as f:
-            for line in f:
-                data = json.loads(line)
-                if str(data.get('doc_id', '')) == str(doc_id):
-                    return data.get('text', '')
-    except Exception:
-        pass
-    return 'نص الوثيقة غير متوفر'
-
-
-def get_document_text(doc_id):
-    return get_document_text_cached(doc_id)
-
+# ============================
+# Routes
+# ============================
 
 @app.route('/')
 def home():
     return send_from_directory(app.static_folder, 'index.html')
-
 
 @app.route('/api/search', methods=['POST'])
 def api_search():
@@ -621,6 +711,10 @@ def api_search():
         refine = bool(data.get('refine', False))
         preprocessing = data.get('preprocessing', 'stemming')
         evaluate = bool(data.get('evaluate', False))
+        
+        # استقبال معاملات الـ Hybrid
+        hybrid_mode = data.get('hybrid_mode', 'parallel')
+        weights = data.get('weights', None)
 
         if not query.strip():
             return jsonify({'error': 'Query is required.'}), 400
@@ -631,35 +725,69 @@ def api_search():
         if evaluate and not str(query_id).strip():
             return jsonify({'error': 'query_id is required when evaluation is enabled.'}), 400
 
-        cache_key = (query, str(query_id), model, top_k, preprocessing, evaluate)
+        # مفتاح الكاش الجديد مع إضافة hybrid_mode و weights
+        cache_key = (query, str(query_id), model, top_k, preprocessing, evaluate, hybrid_mode, str(weights))
         if cache_key in QUERY_CACHE:
             return jsonify(QUERY_CACHE[cache_key])
 
+        results = []
+        
         if model == 'tfidf':
-            results = run_tfidf_search(query, top_k, preprocessing)
+            assets = get_search_assets(preprocessing)
+            results = search_tfidf(query, assets, top_k)
+            texts = get_documents_texts([item['doc_id'] for item in results])
+            for item in results:
+                item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
+                
         elif model == 'bert':
             load_bert_resources()
             results = search_bert(query, top_k=top_k, use_title=True, alpha=0.4)
             texts = get_documents_texts([item['doc_id'] for item in results])
             for item in results:
                 item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
+                
         elif model == 'bm25':
             results = search_bm25(query, top_k)
+            texts = get_documents_texts([item['doc_id'] for item in results])
+            for item in results:
+                item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
+        
+        elif model == 'hybrid':
+            # التحقق من وجود الأوزان في الوضع المتوازي
+            if hybrid_mode == 'parallel' and weights is None:
+                return jsonify({'error': 'Weights are required for parallel hybrid mode.'}), 400
+            
+            # تحميل BERT و BM25 إذا لزم الأمر (سيتم تحميلهما تلقائياً داخل الدوال)
+            results = search_hybrid(query, hybrid_mode, weights, top_k, preprocessing)
             texts = get_documents_texts([item['doc_id'] for item in results])
             for item in results:
                 item['text'] = texts.get(str(item['doc_id']), 'نص الوثيقة غير متوفر')
         else:
             return jsonify({'error': f'Model {model} not available in this backend.'}), 400
 
-        payload = {'results': results, 'model': model, 'query': query, 'query_id': str(query_id), 'preprocessing': preprocessing}
+        payload = {
+            'results': results,
+            'model': model,
+            'query': query,
+            'query_id': str(query_id),
+            'preprocessing': preprocessing
+        }
+        
+        # إضافة معلومات الـ Hybrid إلى الـ payload للتوضيح
+        if model == 'hybrid':
+            payload['hybrid_mode'] = hybrid_mode
+            if hybrid_mode == 'parallel':
+                payload['weights'] = weights
+        
         if evaluate:
             payload.update(build_evaluation_payload(results, query_id, top_k, preprocessing))
+            
         QUERY_CACHE[cache_key] = payload
         return jsonify(payload)
+        
     except Exception as e:
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
-
 
 @app.route('/api/queries', methods=['GET'])
 def api_queries():
@@ -669,12 +797,10 @@ def api_queries():
         traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
-
 if __name__ == '__main__':
     init_sqlite_documents()
     init_sqlite_queries()
     init_sqlite_qrels()
-    # load_bert_resources()   # 🔥 تم التعليق: سيتم التحميل عند أول طلب BERT
-    # load_bm25_model()       # 🔥 تم التعليق: سيتم التحميل عند أول طلب BM25
-    print('Server starting... (BERT and BM25 will load on first use)')
+    # تم التعليق على التحميل المسبق للـ BERT و BM25 (سيتم التحميل عند أول طلب)
+    print('🚀 Server starting... (BERT, BM25, and Hybrid will load on first use)')
     app.run(debug=False, host='0.0.0.0', port=5000)

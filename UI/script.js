@@ -188,9 +188,9 @@ function setPreset(type) {
         wBert.value = 0.33;
         wBm25.value = 0.34;
     } else if (type === 'best') {
-        wTfidf.value = 0.30;
-        wBert.value = 0.10;
-        wBm25.value = 0.60;
+        wTfidf.value = 0.20;
+        wBert.value = 0.00;
+        wBm25.value = 0.80;
     }
     normalizeWeights();
 }
