@@ -716,6 +716,10 @@ def api_search():
         hybrid_mode = data.get('hybrid_mode', 'parallel')
         weights = data.get('weights', None)
 
+        # 🔥 استقبال معاملات BM25 من الواجهة (قيم افتراضية 2.0 و 0.60)
+        bm25_k1 = data.get('bm25_k1', 2.0)
+        bm25_b = data.get('bm25_b', 0.60)
+
         if not query.strip():
             return jsonify({'error': 'Query is required.'}), 400
 
@@ -725,8 +729,18 @@ def api_search():
         if evaluate and not str(query_id).strip():
             return jsonify({'error': 'query_id is required when evaluation is enabled.'}), 400
 
-        # مفتاح الكاش الجديد مع إضافة hybrid_mode و weights
-        cache_key = (query, str(query_id), model, top_k, preprocessing, evaluate, hybrid_mode, str(weights))
+        # 🔥 تطبيق معاملات BM25 على النموذج (إذا كان النموذج BM25 أو Hybrid)
+        if model in ['bm25', 'hybrid']:
+            if bm25_model is None:
+                load_bm25_model()
+            # تحديث المعاملات فقط إذا كانت القيم المرسلة مختلفة (أو دائماً)
+            bm25_model.k1 = float(bm25_k1)
+            bm25_model.b = float(bm25_b)
+            # طباعة للتأكد (اختياري)
+            print(f"🔧 BM25 params updated: k1={bm25_model.k1}, b={bm25_model.b}")
+
+        # مفتاح الكاش الجديد مع إضافة hybrid_mode و weights و معاملات BM25
+        cache_key = (query, str(query_id), model, top_k, preprocessing, evaluate, hybrid_mode, str(weights), bm25_k1, bm25_b)
         if cache_key in QUERY_CACHE:
             return jsonify(QUERY_CACHE[cache_key])
 
