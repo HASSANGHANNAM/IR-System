@@ -30,6 +30,13 @@ const serialNote = document.getElementById('serialNote');
 const presetEqual = document.getElementById('presetEqual');
 const presetBest = document.getElementById('presetBest');
 
+// ===== عناصر BM25 Configuration =====
+const bm25Config = document.getElementById('bm25Config');
+const bm25K1 = document.getElementById('bm25K1');
+const bm25B = document.getElementById('bm25B');
+const bm25PresetDefault = document.getElementById('bm25PresetDefault');
+const bm25PresetBest = document.getElementById('bm25PresetBest');
+
 let lastSearchResponse = null;
 let lastQueryId = null;
 
@@ -131,7 +138,9 @@ if (dropdownToggleBtn && querySelect) {
     });
 }
 
+// ============================================================
 // ===== دوال الـ Hybrid =====
+// ============================================================
 
 // إظهار/إخفاء قسم الـ Hybrid حسب النموذج المختار
 function toggleHybridConfig() {
@@ -195,8 +204,43 @@ function setPreset(type) {
     normalizeWeights();
 }
 
-// ربط الأحداث الخاصة بالـ Hybrid
-modelSelect.addEventListener('change', toggleHybridConfig);
+// ============================================================
+// ===== دوال BM25 Configuration =====
+// ============================================================
+
+// إظهار/إخفاء قسم BM25 Configuration حسب النموذج المختار
+function toggleBm25Config() {
+    if (modelSelect.value === 'bm25') {
+        bm25Config.style.display = 'block';
+    } else {
+        bm25Config.style.display = 'none';
+    }
+}
+
+// ضبط BM25 Presets
+function setBm25Preset(type) {
+    if (type === 'default') {
+        // القيم الافتراضية الأصلية
+        bm25K1.value = '1.5';
+        bm25B.value = '0.75';
+    } else if (type === 'best') {
+        // 🔥 أفضل القيم من تجربة test_bm25_params.py
+        // k1 = 2.0, b = 0.60  (MAP = 0.1470)
+        bm25K1.value = '2.0';
+        bm25B.value = '0.60';
+    }
+}
+
+// ============================================================
+// ===== ربط الأحداث =====
+// ============================================================
+
+// عند تغيير النموذج، نتحكم في إظهار/إخفاء الأقسام
+modelSelect.addEventListener('change', function () {
+    toggleHybridConfig();
+    toggleBm25Config();
+});
+
 hybridMode.addEventListener('change', toggleWeightsSection);
 
 // ربط التطبيع عند تغيير أي من حقول الأوزان
@@ -206,11 +250,19 @@ hybridMode.addEventListener('change', toggleWeightsSection);
 
 // تشغيل الحالة الأولية
 toggleHybridConfig();
+toggleBm25Config();
 toggleWeightsSection();
 
-// ===== Fetch Search (معدل لدعم الـ Hybrid) =====
+// ============================================================
+// ===== Fetch Search (معدل لدعم الـ Hybrid و BM25 Parameters) =====
+// ============================================================
+
 const fetchSearch = async (query, query_id, model, top_k, refine, preprocessing, evaluate, hybrid_mode, weights) => {
     try {
+        // 🔥 قراءة معاملات BM25 (دائماً، سواء كانت ظاهرة أم لا)
+        const bm25_k1 = parseFloat(bm25K1.value) || 1.5;
+        const bm25_b = parseFloat(bm25B.value) || 0.75;
+
         const body = {
             query,
             query_id,
@@ -220,6 +272,9 @@ const fetchSearch = async (query, query_id, model, top_k, refine, preprocessing,
             preprocessing,
             evaluate: evaluate || false,
             dataset: datasetSelect.value,
+            // 🔥 إرسال معاملات BM25 مع كل الطلبات (الخادم سيستخدمها فقط عند الحاجة)
+            bm25_k1: bm25_k1,
+            bm25_b: bm25_b
         };
 
         // إضافة بيانات الـ Hybrid إن وُجدت

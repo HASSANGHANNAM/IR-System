@@ -150,6 +150,53 @@
                             </div>
                             <!-- ===== نهاية قسم Hybrid ===== -->
 
+                            <!-- ===== BM25 Configuration (يظهر فقط عند اختيار BM25) ===== -->
+                            <div id="bm25Config"
+                                style="display: none; margin-top: 15px; padding: 12px; border: 1px solid rgba(125, 90, 255, 0.25); border-radius: 8px; background: rgba(20, 28, 58, 0.95);">
+                                <h4 style="margin: 0 0 8px 0; color: #c5d2ff;">⚙️ BM25 Configuration</h4>
+
+                                <div class="field-group" style="margin-bottom: 8px;">
+                                    <label style="font-size: 0.8rem; color: #9ab4ff;">Parameters</label>
+                                    <div style="display: flex; gap: 10px; margin-top: 4px; flex-wrap: wrap;">
+                                        <div style="flex: 1; min-width: 80px;">
+                                            <label style="font-size: 0.7rem; color: #8899bb;">k1</label>
+                                            <input type="number" id="bm25K1" value="2.0" step="0.1" min="0.1" max="5.0"
+                                                style="width: 100%; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(106, 114, 255, 0.25); background: rgba(10, 14, 26, 0.95); color: #eef2ff;">
+                                        </div>
+                                        <div style="flex: 1; min-width: 80px;">
+                                            <label style="font-size: 0.7rem; color: #8899bb;">b</label>
+                                            <input type="number" id="bm25B" value="0.60" step="0.05" min="0.0" max="1.0"
+                                                style="width: 100%; padding: 4px 6px; border-radius: 6px; border: 1px solid rgba(106, 114, 255, 0.25); background: rgba(10, 14, 26, 0.95); color: #eef2ff;">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="margin: 10px 0;">
+                                    <h5 style="margin: 0 0 4px 0; color: #c5d2ff;">Quick Presets</h5>
+                                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                        <button type="button" id="bm25PresetDefault" onclick="setBm25Preset('default')"
+                                            style="flex: 1; min-width: 120px; padding: 6px 12px; background: #2a3a5c; color: #eef2ff; border: 1px solid rgba(106, 114, 255, 0.3); border-radius: 999px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                                            📌 Default
+                                        </button>
+                                        <button type="button" id="bm25PresetBest" onclick="setBm25Preset('best')"
+                                            style="flex: 1; min-width: 120px; padding: 6px 12px; background: #2a3a5c; color: #eef2ff; border: 1px solid rgba(106, 114, 255, 0.3); border-radius: 999px; cursor: pointer; font-size: 0.85rem; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;">
+                                            🏆 The Best
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- نص توضيحي -->
+                                <div
+                                    style="margin-top: 8px; padding: 8px; background: rgba(255, 193, 7, 0.06); border: 1px solid rgba(255, 193, 7, 0.08); border-radius: 6px; font-size: 13px; color: #aab8cc;">
+                                    <strong>How it works:</strong><br>
+                                    • k1: Controls term frequency saturation (higher = more weight to frequent
+                                    terms).<br>
+                                    • b: Controls document length normalization (0 = no normalization, 1 = full
+                                    normalization).
+                                </div>
+                            </div>
+                            <!-- ===== نهاية قسم BM25 ===== -->
+
                             <div class="field-group">
                                 <label for="top_k">Top-K</label>
                                 <input id="top_k" type="number" min="1" max="20" value="10">
