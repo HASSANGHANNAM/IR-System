@@ -6,6 +6,215 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IR-System</title>
     <link rel="stylesheet" href="/style.css">
+    <!-- إضافة Chart.js لرسم المخططات -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* ===== تنسيقات النافذة المنبثقة (Modal) ===== */
+        #docModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(4px);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #docModal .modal-content {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80%;
+            background: #1a1f2e;
+            border-radius: 16px;
+            padding: 24px;
+            overflow-y: auto;
+            border: 1px solid rgba(125, 90, 255, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        #docModal .modal-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #docModal .modal-content::-webkit-scrollbar-thumb {
+            background: rgba(106, 114, 255, 0.4);
+            border-radius: 4px;
+        }
+
+        #docModal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            border-bottom: 1px solid rgba(106, 114, 255, 0.15);
+            padding-bottom: 12px;
+        }
+
+        #docModal .modal-title {
+            color: #c5d2ff;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        #docModal .close-btn {
+            background: none;
+            border: none;
+            color: #aab8ff;
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: color 0.2s;
+            line-height: 1;
+        }
+
+        #docModal .close-btn:hover {
+            color: #fff;
+        }
+
+        #docModal .modal-body {
+            color: #eef2ff;
+            font-size: 0.95rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        #docModal .modal-body p {
+            margin: 0 0 0.5rem 0;
+        }
+
+        #docModal .modal-body .loading {
+            color: #8899bb;
+            font-style: italic;
+        }
+
+        #docModal .modal-body .error {
+            color: #f44336;
+        }
+
+        @media (max-width: 640px) {
+            #docModal .modal-content {
+                width: 92%;
+                padding: 16px;
+                max-height: 90%;
+            }
+
+            #docModal .modal-title {
+                font-size: 1rem;
+            }
+        }
+
+        /* ===== تنسيقات صفحة المخططات ===== */
+        #chartsPage .panel-card {
+            padding: 1.5rem;
+        }
+
+        #chartsPage .chart-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-bottom: 1.5rem;
+        }
+
+        #chartsPage .chart-controls .field-group {
+            flex: 1 1 250px;
+        }
+
+        #chartsPage .chart-controls button {
+            flex: 0 0 auto;
+            padding: 0.6rem 1.8rem;
+            height: 42px;
+        }
+
+        #chartContainer {
+            width: 100%;
+            min-height: 400px;
+            background: rgba(10, 14, 27, 0.5);
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6a7aac;
+            font-size: 0.95rem;
+            border: 1px solid rgba(98, 103, 255, 0.08);
+        }
+
+        #chartContainer canvas {
+            max-height: 450px;
+            max-width: 100%;
+        }
+
+        #chartAnalysis {
+            margin-top: 1.5rem;
+            padding: 1.2rem;
+            background: rgba(10, 14, 27, 0.96);
+            border-radius: 12px;
+            border: 1px solid rgba(98, 103, 255, 0.08);
+        }
+
+        #chartAnalysis h3 {
+            color: #c5d2ff;
+            margin-top: 0;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        #chartAnalysis #analysisText {
+            color: #c8d8ff;
+            line-height: 1.7;
+            margin: 0;
+            white-space: pre-wrap;
+        }
+
+        /* ===== 🔥 Spinner للتحميل (جديد) ===== */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(106, 114, 255, 0.15);
+            border-top: 5px solid #6b7dff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        #loadingSpinner {
+            background: rgba(8, 13, 26, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 14px;
+            margin: 20px 0;
+            padding: 30px;
+            text-align: center;
+            display: none;
+        }
+
+        #loadingSpinner p {
+            color: #aab8cc;
+            margin-top: 10px;
+        }
+
+        /* ===== إخفاء إحصاءات التقييم افتراضياً ===== */
+        #evalStats {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,35 +223,38 @@
             <div class="brand">IR-System</div>
             <nav class="nav-links">
                 <button class="nav-link active" data-target="searchPage">Search</button>
+                <button class="nav-link" data-target="chartsPage">📊 Charts</button>
                 <button class="nav-link" data-target="aboutPage">About</button>
             </nav>
         </header>
 
-        <!-- ===== شريط البحث العلوي ===== -->
-        <div class="top-search-bar">
-            <div class="search-row">
-                <div class="field-group query-group">
-                    <label for="query">Query</label>
-                    <div class="query-row">
-                        <input id="query" type="text" placeholder="Enter search query...">
-                        <button id="clearQueryBtn" class="clear-btn" type="button">✕</button>
-                        <button id="dropdownToggleBtn" class="dropdown-toggle-btn" type="button"
-                            title="Saved Queries">▼</button>
-                        <select id="querySelect" class="hidden-select">
-                            <option value="">-- Select a saved query --</option>
-                        </select>
-                    </div>
-                </div>
-                <button id="searchBtn" class="primary-button compact-btn" type="button">
-                    <span class="search-icon">🔍</span>
-                    Search
-                </button>
-            </div>
-        </div>
-
         <!-- ===== المحتوى الرئيسي ===== -->
         <main class="page-wrapper">
+
+            <!-- ===== صفحة البحث ===== -->
             <section id="searchPage" class="page-section active">
+                <!-- شريط البحث (يظهر فقط في صفحة البحث) -->
+                <div class="top-search-bar">
+                    <div class="search-row">
+                        <div class="field-group query-group">
+                            <label for="query">Query</label>
+                            <div class="query-row">
+                                <input id="query" type="text" placeholder="Enter search query...">
+                                <button id="clearQueryBtn" class="clear-btn" type="button">✕</button>
+                                <button id="dropdownToggleBtn" class="dropdown-toggle-btn" type="button"
+                                    title="Saved Queries">▼</button>
+                                <select id="querySelect" class="hidden-select">
+                                    <option value="">-- Select a saved query --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button id="searchBtn" class="primary-button compact-btn" type="button">
+                            <span class="search-icon">🔍</span>
+                            Search
+                        </button>
+                    </div>
+                </div>
+
                 <div class="content-grid">
 
                     <!-- العمود الأيسر -->
@@ -136,7 +348,7 @@
                                 <div id="serialNote"
                                     style="display: none; margin-top: 8px; padding: 8px 12px; background: rgba(255, 193, 7, 0.12); border: 1px solid rgba(255, 193, 7, 0.2); border-radius: 6px; color: #ffd966; font-size: 13px;">
                                     ⚠️ <strong>Serial Mode:</strong> Weights are not used. Ranking is performed
-                                    sequentially (e.g., BM25 → BERT).
+                                    sequentially (e.g., TF_IDF → BM25).
                                 </div>
 
                                 <!-- How it works (بنفس خلفية الرسالة ولكن أفتح) -->
@@ -213,6 +425,19 @@
                                     Enable Query Refinement
                                 </label>
                             </div>
+
+                            <!-- ===== 🔥 إضافة خيار FAISS الجديد هنا ===== -->
+                            <div class="field-group checkbox-row">
+                                <label class="checkbox-label">
+                                    <input id="faissToggle" type="checkbox">
+                                    ⚡ Enable FAISS (Fast Semantic Search)
+                                </label>
+                                <small style="color: #6a7aac; font-size: 0.7rem; display: block; margin-top: 2px;">
+                                    Speeds up BERT search using Vector Index (optional)
+                                </small>
+                            </div>
+                            <!-- ===== نهاية إضافة FAISS ===== -->
+
                             <div class="field-group">
                                 <label for="preprocessMethod">Preprocessing Method</label>
                                 <select id="preprocessMethod">
@@ -234,8 +459,26 @@
                         <div class="panel-card results-panel">
                             <div class="panel-header">
                                 <h2>Search Results</h2>
-                                <span id="resultCount" class="result-count">0</span>
+                                <!-- 🔥 إضافة إحصاءات Relevant / Non-Relevant بجانب عدد النتائج -->
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span id="resultCount" class="result-count">0</span>
+                                    <!-- 🔥 حاوية إحصاءات التقييم (مخفية افتراضياً) -->
+                                    <div id="evalStats"
+                                        style="display: none; display: flex; align-items: center; gap: 10px;">
+                                        <span id="relevantCount" class="result-count"
+                                            style="color: #4caf50; background: rgba(76, 175, 80, 0.15);">✅ 0</span>
+                                        <span id="nonRelevantCount" class="result-count"
+                                            style="color: #f44336; background: rgba(244, 67, 54, 0.15);">❌ 0</span>
+                                    </div>
+                                </div>
                             </div>
+
+                            <!-- 🔥 Spinner (يظهر أثناء البحث) -->
+                            <div id="loadingSpinner">
+                                <div class="spinner"></div>
+                                <p>🔍 Searching Please wait.....</p>
+                            </div>
+
                             <div id="resultsGrid" class="results-grid">
                                 <div class="empty-state">
                                     <span>🔍</span>
@@ -256,9 +499,12 @@
                                 </div>
                                 <div class="metric-card"><strong>MAP</strong><span id="mapValue">0%</span></div>
                                 <div class="metric-card"><strong>NDCG</strong><span id="ndcgValue">0%</span></div>
+                                <!-- 🔥 بطاقة Recall@K المضافة -->
+                                <div class="metric-card"><strong>Recall@K</strong><span id="recallValue">0%</span></div>
                             </div>
                             <div id="missingDocsContainer" class="missing-docs-container">
-                                <h4>📋 Missing Relevant Docs</h4>
+                                <!-- 🔥 إضافة عدد المفقودين بجانب العنوان -->
+                                <h4>📋 Missing Relevant Docs (<span id="missingCount">0</span>)</h4>
                                 <div id="missingDocsList">قم بالبحث لتظهر نتائج التقييم</div>
                             </div>
                         </div>
@@ -267,6 +513,35 @@
                 </div>
             </section>
 
+            <!-- ===== صفحة المخططات الجديدة ===== -->
+            <section id="chartsPage" class="page-section">
+                <div class="panel-card">
+                    <div class="panel-header">
+                        <h2>📊 Performance Charts</h2>
+                    </div>
+                    <div class="chart-controls">
+                        <div class="field-group">
+                            <label for="chartType">Select Chart Type</label>
+                            <select id="chartType">
+                                <option value="model_comparison">Model Comparison (Bar Chart)</option>
+                                <option value="bm25_params">BM25 Parameters Impact (Line Chart)</option>
+                                <option value="hybrid_weights">Hybrid Weights Impact (Bar Chart)</option>
+                                <option value="serial_permutations">Serial Permutations (Bar Chart)</option>
+                            </select>
+                        </div>
+                        <button id="generateChartBtn" class="primary-button">📈 Generate Chart</button>
+                    </div>
+                    <div id="chartContainer">
+                        <p>Select a chart type and click "Generate Chart".</p>
+                    </div>
+                    <div id="chartAnalysis">
+                        <h3>📝 Analysis</h3>
+                        <p id="analysisText">Chart analysis will appear here.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- صفحة About -->
             <section id="aboutPage" class="page-section">
                 <div class="panel-card overview-card">
                     <div class="panel-header">
@@ -281,6 +556,19 @@
                 </div>
             </section>
         </main>
+    </div>
+
+    <!-- ===== نافذة منبثقة (Modal) لعرض النص الكامل ===== -->
+    <div id="docModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Document</h2>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <p class="loading">جاري تحميل النص...</p>
+            </div>
+        </div>
     </div>
 
     <script src="script.js"></script>
