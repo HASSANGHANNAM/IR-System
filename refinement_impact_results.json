@@ -1,0 +1,3301 @@
+{
+  "top_k": 10,
+  "models": {
+    "tfidf": {
+      "queries": {
+        "1": {
+          "query_text": "Should teachers get tenure?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.128788,
+            "ndcg": 0.403861
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.146591,
+            "ndcg": 0.424277
+          }
+        },
+        "2": {
+          "query_text": "Is vaping with e-cigarettes safe?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.185653,
+            "ndcg": 0.48831
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.008642,
+            "ndcg": 0.05467
+          }
+        },
+        "3": {
+          "query_text": "Should insider trading be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "4": {
+          "query_text": "Should corporal punishment be used in schools?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.143229,
+            "ndcg": 0.580098
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.062269,
+            "ndcg": 0.382331
+          }
+        },
+        "5": {
+          "query_text": "Should social security be privatized?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.034598,
+            "ndcg": 0.24287
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.025,
+            "ndcg": 0.234458
+          }
+        },
+        "6": {
+          "query_text": "Is a college education worth it?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.035907,
+            "ndcg": 0.128644
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.013514,
+            "ndcg": 0.04686
+          }
+        },
+        "7": {
+          "query_text": "Should felons who have completed their sentence be allowed to vote?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.006289,
+            "ndcg": 0.057074
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "8": {
+          "query_text": "Should abortion be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.008333,
+            "ndcg": 0.004801
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.005556,
+            "ndcg": 0.003805
+          }
+        },
+        "9": {
+          "query_text": "Should students have to wear school uniforms?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.119698,
+            "ndcg": 0.240978
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.118222,
+            "ndcg": 0.348442
+          }
+        },
+        "10": {
+          "query_text": "Should any vaccines be required for children?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.023214,
+            "ndcg": 0.192764
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.03869,
+            "ndcg": 0.200531
+          }
+        },
+        "11": {
+          "query_text": "Should performance-enhancing drugs be accepted in sports?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.1,
+            "ndcg": 0.315833
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "12": {
+          "query_text": "Should birth control pills be available over the counter?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.096496,
+            "ndcg": 0.205684
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.031447,
+            "ndcg": 0.079903
+          }
+        },
+        "13": {
+          "query_text": "Can alternative energy effectively replace fossil fuels?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.041729,
+            "ndcg": 0.128492
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.052632,
+            "ndcg": 0.152166
+          }
+        },
+        "14": {
+          "query_text": "Is sexual orientation determined at birth?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.064959,
+            "ndcg": 0.290186
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.034317,
+            "ndcg": 0.291316
+          }
+        },
+        "15": {
+          "query_text": "Should animals be used for scientific or commercial testing?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "16": {
+          "query_text": "Should prescription drugs be advertised directly to consumers?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.064236,
+            "ndcg": 0.223902
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.026562,
+            "ndcg": 0.115957
+          }
+        },
+        "17": {
+          "query_text": "Should recreational marijuana be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.066162,
+            "ndcg": 0.322017
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.007677,
+            "ndcg": 0.168757
+          }
+        },
+        "18": {
+          "query_text": "Should churches remain tax-exempt?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.018519,
+            "ndcg": 0.106496
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.001852,
+            "ndcg": 0.030784
+          }
+        },
+        "19": {
+          "query_text": "Should gay marriage be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003571,
+            "ndcg": 0.042597
+          }
+        },
+        "20": {
+          "query_text": "Is drinking milk healthy for humans?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.058764,
+            "ndcg": 0.333278
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.009574,
+            "ndcg": 0.07665
+          }
+        },
+        "21": {
+          "query_text": "Is human activity primarily responsible for global climate change?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.020425,
+            "ndcg": 0.207904
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.046569,
+            "ndcg": 0.251373
+          }
+        },
+        "22": {
+          "query_text": "Is a two-state solution an acceptable solution to the Israeli-Palestinian conflict?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.025455,
+            "ndcg": 0.103004
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.030303,
+            "ndcg": 0.111408
+          }
+        },
+        "23": {
+          "query_text": "Should euthanasia or physician-assisted suicide be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.127022,
+            "ndcg": 0.451265
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.142116,
+            "ndcg": 0.48205
+          }
+        },
+        "24": {
+          "query_text": "Does lowering the federal corporate income tax rate create jobs?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.113669,
+            "ndcg": 0.433972
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.008433,
+            "ndcg": 0.073646
+          }
+        },
+        "26": {
+          "query_text": "Do standardized tests improve education?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.044662,
+            "ndcg": 0.28377
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.023529,
+            "ndcg": 0.229771
+          }
+        },
+        "27": {
+          "query_text": "Should more gun control laws be enacted?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.028494,
+            "ndcg": 0.100927
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.018116,
+            "ndcg": 0.084643
+          }
+        },
+        "28": {
+          "query_text": "Should prostitution be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.050164,
+            "ndcg": 0.252057
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.050164,
+            "ndcg": 0.252057
+          }
+        },
+        "29": {
+          "query_text": "Should the government allow illegal immigrants to become citizens?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.041887,
+            "ndcg": 0.168215
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.042681,
+            "ndcg": 0.20563
+          }
+        },
+        "30": {
+          "query_text": "Should adults have the right to carry a concealed handgun?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.092105,
+            "ndcg": 0.368303
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.108709,
+            "ndcg": 0.424285
+          }
+        },
+        "31": {
+          "query_text": "Is obesity a disease?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.073031,
+            "ndcg": 0.300574
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.073031,
+            "ndcg": 0.300574
+          }
+        },
+        "32": {
+          "query_text": "Do electronic voting machines improve the voting process?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003876,
+            "ndcg": 0.009791
+          }
+        },
+        "33": {
+          "query_text": "Should people become vegetarian?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.037179,
+            "ndcg": 0.128693
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.036111,
+            "ndcg": 0.125516
+          }
+        },
+        "34": {
+          "query_text": "Are social networking sites good for our society?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.18,
+            "ndcg": 0.403811
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.178,
+            "ndcg": 0.364557
+          }
+        },
+        "35": {
+          "query_text": "Do violent video games contribute to youth violence?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.144072,
+            "ndcg": 0.320405
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.076968,
+            "ndcg": 0.126868
+          }
+        },
+        "36": {
+          "query_text": "Is golf a sport?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.082814,
+            "ndcg": 0.300294
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.08025,
+            "ndcg": 0.310235
+          }
+        },
+        "37": {
+          "query_text": "Is cell phone radiation safe?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.010982,
+            "ndcg": 0.104636
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "38": {
+          "query_text": "Should marijuana be a medical option?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.023836,
+            "ndcg": 0.158913
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "39": {
+          "query_text": "Should the federal minimum wage be increased?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.134699,
+            "ndcg": 0.47151
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.099313,
+            "ndcg": 0.415186
+          }
+        },
+        "40": {
+          "query_text": "Should the death penalty be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.006923,
+            "ndcg": 0.074794
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.007692,
+            "ndcg": 0.055
+          }
+        },
+        "41": {
+          "query_text": "Should student loan debt be easier to discharge in bankruptcy?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.083056,
+            "ndcg": 0.459575
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.081395,
+            "ndcg": 0.455359
+          }
+        },
+        "42": {
+          "query_text": "Should fighting be allowed in hockey?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.041558,
+            "ndcg": 0.160358
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.039394,
+            "ndcg": 0.158397
+          }
+        },
+        "43": {
+          "query_text": "Should bottled water be banned?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.099288,
+            "ndcg": 0.400454
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.079823,
+            "ndcg": 0.287367
+          }
+        },
+        "44": {
+          "query_text": "Should election day be a national holiday?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "45": {
+          "query_text": "Should the penny stay in circulation?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.028302,
+            "ndcg": 0.208101
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.017138,
+            "ndcg": 0.103103
+          }
+        },
+        "46": {
+          "query_text": "Should net neutrality be restored?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.108466,
+            "ndcg": 0.314844
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.010053,
+            "ndcg": 0.143138
+          }
+        },
+        "47": {
+          "query_text": "Is homework beneficial?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.027663,
+            "ndcg": 0.137303
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003846,
+            "ndcg": 0.041198
+          }
+        },
+        "48": {
+          "query_text": "Should the voting age be lowered?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.092324,
+            "ndcg": 0.349433
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "49": {
+          "query_text": "Should body cameras be mandatory for police?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.119577,
+            "ndcg": 0.669211
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.063069,
+            "ndcg": 0.488645
+          }
+        },
+        "50": {
+          "query_text": "Should everyone get a universal basic income?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.02209,
+            "ndcg": 0.100693
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        }
+      },
+      "averages": {
+        "without_refinement": {
+          "avg_precision": 0.4224489795918367,
+          "avg_map": 0.062373816326530614,
+          "avg_ndcg": 0.23874095918367347
+        },
+        "with_refinement": {
+          "avg_precision": 0.2938775510204082,
+          "avg_map": 0.03891214285714286,
+          "avg_ndcg": 0.16639389795918366
+        }
+      },
+      "improvement": {
+        "precision_diff": -0.1285714285714285,
+        "map_diff": -0.023461673469387753,
+        "ndcg_diff": -0.0723470612244898
+      },
+      "num_queries_processed": 49
+    },
+    "bm25": {
+      "queries": {
+        "1": {
+          "query_text": "Should teachers get tenure?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.144697,
+            "ndcg": 0.435831
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.106385,
+            "ndcg": 0.301627
+          }
+        },
+        "2": {
+          "query_text": "Is vaping with e-cigarettes safe?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.132787,
+            "ndcg": 0.414688
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "3": {
+          "query_text": "Should insider trading be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.129329,
+            "ndcg": 0.508487
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.007576,
+            "ndcg": 0.051355
+          }
+        },
+        "4": {
+          "query_text": "Should corporal punishment be used in schools?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.1875,
+            "ndcg": 0.557911
+          },
+          "with_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.208333,
+            "ndcg": 0.668604
+          }
+        },
+        "5": {
+          "query_text": "Should social security be privatized?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.15787,
+            "ndcg": 0.398358
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.141204,
+            "ndcg": 0.420062
+          }
+        },
+        "6": {
+          "query_text": "Is a college education worth it?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.17722,
+            "ndcg": 0.365029
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.151351,
+            "ndcg": 0.326849
+          }
+        },
+        "7": {
+          "query_text": "Should felons who have completed their sentence be allowed to vote?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.132075,
+            "ndcg": 0.415269
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.087264,
+            "ndcg": 0.389289
+          }
+        },
+        "8": {
+          "query_text": "Should abortion be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.097963,
+            "ndcg": 0.340043
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "9": {
+          "query_text": "Should students have to wear school uniforms?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.1,
+            "ndcg": 0.246748
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.034667,
+            "ndcg": 0.181305
+          }
+        },
+        "10": {
+          "query_text": "Should any vaccines be required for children?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.119643,
+            "ndcg": 0.346634
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.072704,
+            "ndcg": 0.308092
+          }
+        },
+        "11": {
+          "query_text": "Should performance-enhancing drugs be accepted in sports?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.105263,
+            "ndcg": 0.322808
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.071491,
+            "ndcg": 0.256551
+          }
+        },
+        "12": {
+          "query_text": "Should birth control pills be available over the counter?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.118269,
+            "ndcg": 0.23674
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.045912,
+            "ndcg": 0.110637
+          }
+        },
+        "13": {
+          "query_text": "Can alternative energy effectively replace fossil fuels?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.099906,
+            "ndcg": 0.246944
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.096491,
+            "ndcg": 0.222282
+          }
+        },
+        "14": {
+          "query_text": "Is sexual orientation determined at birth?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.082531,
+            "ndcg": 0.262189
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.108282,
+            "ndcg": 0.563292
+          }
+        },
+        "15": {
+          "query_text": "Should animals be used for scientific or commercial testing?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.059439,
+            "ndcg": 0.18002
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.036879,
+            "ndcg": 0.201126
+          }
+        },
+        "16": {
+          "query_text": "Should prescription drugs be advertised directly to consumers?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.142047,
+            "ndcg": 0.408914
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.140253,
+            "ndcg": 0.388315
+          }
+        },
+        "17": {
+          "query_text": "Should recreational marijuana be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.159798,
+            "ndcg": 0.336694
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.015152,
+            "ndcg": 0.146522
+          }
+        },
+        "18": {
+          "query_text": "Should churches remain tax-exempt?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.03739,
+            "ndcg": 0.237674
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.02381,
+            "ndcg": 0.17986
+          }
+        },
+        "19": {
+          "query_text": "Should gay marriage be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.089286,
+            "ndcg": 0.375244
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003571,
+            "ndcg": 0.042597
+          }
+        },
+        "20": {
+          "query_text": "Is drinking milk healthy for humans?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.212766,
+            "ndcg": 0.457888
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.170213,
+            "ndcg": 0.420587
+          }
+        },
+        "21": {
+          "query_text": "Is human activity primarily responsible for global climate change?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.131544,
+            "ndcg": 0.486482
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.071678,
+            "ndcg": 0.399526
+          }
+        },
+        "22": {
+          "query_text": "Is a two-state solution an acceptable solution to the Israeli-Palestinian conflict?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.10531,
+            "ndcg": 0.369578
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.107431,
+            "ndcg": 0.366129
+          }
+        },
+        "23": {
+          "query_text": "Should euthanasia or physician-assisted suicide be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.13826,
+            "ndcg": 0.470225
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.116435,
+            "ndcg": 0.402317
+          }
+        },
+        "24": {
+          "query_text": "Does lowering the federal corporate income tax rate create jobs?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.178571,
+            "ndcg": 0.619249
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.041419,
+            "ndcg": 0.289051
+          }
+        },
+        "26": {
+          "query_text": "Do standardized tests improve education?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.085551,
+            "ndcg": 0.491814
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.062185,
+            "ndcg": 0.419077
+          }
+        },
+        "27": {
+          "query_text": "Should more gun control laws be enacted?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.217391,
+            "ndcg": 0.467411
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.195652,
+            "ndcg": 0.443024
+          }
+        },
+        "28": {
+          "query_text": "Should prostitution be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.137522,
+            "ndcg": 0.580616
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.005159,
+            "ndcg": 0.100215
+          }
+        },
+        "29": {
+          "query_text": "Should the government allow illegal immigrants to become citizens?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.096759,
+            "ndcg": 0.244641
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.099691,
+            "ndcg": 0.27962
+          }
+        },
+        "30": {
+          "query_text": "Should adults have the right to carry a concealed handgun?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.176316,
+            "ndcg": 0.490604
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.108605,
+            "ndcg": 0.388383
+          }
+        },
+        "31": {
+          "query_text": "Is obesity a disease?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.098214,
+            "ndcg": 0.360294
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.024245,
+            "ndcg": 0.151941
+          }
+        },
+        "32": {
+          "query_text": "Do electronic voting machines improve the voting process?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.170413,
+            "ndcg": 0.571354
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.127685,
+            "ndcg": 0.352029
+          }
+        },
+        "33": {
+          "query_text": "Should people become vegetarian?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.106571,
+            "ndcg": 0.452868
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.051282,
+            "ndcg": 0.292344
+          }
+        },
+        "34": {
+          "query_text": "Are social networking sites good for our society?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.152421,
+            "ndcg": 0.584029
+          },
+          "with_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.2,
+            "ndcg": 0.621266
+          }
+        },
+        "35": {
+          "query_text": "Do violent video games contribute to youth violence?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.114385,
+            "ndcg": 0.404201
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.063409,
+            "ndcg": 0.214538
+          }
+        },
+        "36": {
+          "query_text": "Is golf a sport?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.181237,
+            "ndcg": 0.43222
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.173789,
+            "ndcg": 0.511713
+          }
+        },
+        "37": {
+          "query_text": "Is cell phone radiation safe?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.181395,
+            "ndcg": 0.655677
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.015504,
+            "ndcg": 0.094278
+          }
+        },
+        "38": {
+          "query_text": "Should marijuana be a medical option?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.12917,
+            "ndcg": 0.474335
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "39": {
+          "query_text": "Should the federal minimum wage be increased?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.151709,
+            "ndcg": 0.468414
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.036538,
+            "ndcg": 0.229574
+          }
+        },
+        "40": {
+          "query_text": "Should the death penalty be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.081929,
+            "ndcg": 0.490629
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "41": {
+          "query_text": "Should student loan debt be easier to discharge in bankruptcy?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.162791,
+            "ndcg": 0.443475
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.162791,
+            "ndcg": 0.448362
+          }
+        },
+        "42": {
+          "query_text": "Should fighting be allowed in hockey?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.171185,
+            "ndcg": 0.293024
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.079545,
+            "ndcg": 0.252537
+          }
+        },
+        "43": {
+          "query_text": "Should bottled water be banned?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.2,
+            "ndcg": 0.712601
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.230769,
+            "ndcg": 0.637127
+          }
+        },
+        "44": {
+          "query_text": "Should election day be a national holiday?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.118003,
+            "ndcg": 0.209816
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "45": {
+          "query_text": "Should the penny stay in circulation?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.110018,
+            "ndcg": 0.36956
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.146488,
+            "ndcg": 0.380924
+          }
+        },
+        "46": {
+          "query_text": "Should net neutrality be restored?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.13288,
+            "ndcg": 0.55634
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.028571,
+            "ndcg": 0.306393
+          }
+        },
+        "47": {
+          "query_text": "Is homework beneficial?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.153846,
+            "ndcg": 0.386758
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.014423,
+            "ndcg": 0.105578
+          }
+        },
+        "48": {
+          "query_text": "Should the voting age be lowered?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.121311,
+            "ndcg": 0.557439
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.007812,
+            "ndcg": 0.072019
+          }
+        },
+        "49": {
+          "query_text": "Should body cameras be mandatory for police?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.222222,
+            "ndcg": 0.843912
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.175309,
+            "ndcg": 0.65261
+          }
+        },
+        "50": {
+          "query_text": "Should everyone get a universal basic income?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.170556,
+            "ndcg": 0.426889
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.079074,
+            "ndcg": 0.268498
+          }
+        }
+      },
+      "averages": {
+        "without_refinement": {
+          "avg_precision": 0.7306122448979592,
+          "avg_map": 0.13639304081632653,
+          "avg_ndcg": 0.42874628571428575
+        },
+        "with_refinement": {
+          "avg_precision": 0.45714285714285713,
+          "avg_map": 0.08055157142857143,
+          "avg_ndcg": 0.2828168367346939
+        }
+      },
+      "improvement": {
+        "precision_diff": -0.27346938775510204,
+        "map_diff": -0.0558414693877551,
+        "ndcg_diff": -0.14592944897959187
+      },
+      "num_queries_processed": 49
+    },
+    "bert": {
+      "queries": {
+        "1": {
+          "query_text": "Should teachers get tenure?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.074946,
+            "ndcg": 0.406479
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.096023,
+            "ndcg": 0.497291
+          }
+        },
+        "2": {
+          "query_text": "Is vaping with e-cigarettes safe?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.076243,
+            "ndcg": 0.243755
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "3": {
+          "query_text": "Should insider trading be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "4": {
+          "query_text": "Should corporal punishment be used in schools?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.046238,
+            "ndcg": 0.18837
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.077728,
+            "ndcg": 0.291244
+          }
+        },
+        "5": {
+          "query_text": "Should social security be privatized?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.020139,
+            "ndcg": 0.154137
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.01875,
+            "ndcg": 0.152335
+          }
+        },
+        "6": {
+          "query_text": "Is a college education worth it?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.013514,
+            "ndcg": 0.04686
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "7": {
+          "query_text": "Should felons who have completed their sentence be allowed to vote?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.061635,
+            "ndcg": 0.347806
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.078549,
+            "ndcg": 0.306755
+          }
+        },
+        "8": {
+          "query_text": "Should abortion be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.008333,
+            "ndcg": 0.004801
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.012222,
+            "ndcg": 0.029578
+          }
+        },
+        "9": {
+          "query_text": "Should students have to wear school uniforms?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.032667,
+            "ndcg": 0.177098
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.013,
+            "ndcg": 0.072555
+          }
+        },
+        "10": {
+          "query_text": "Should any vaccines be required for children?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.008036,
+            "ndcg": 0.034904
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.016412,
+            "ndcg": 0.074714
+          }
+        },
+        "11": {
+          "query_text": "Should performance-enhancing drugs be accepted in sports?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.079292,
+            "ndcg": 0.230809
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "12": {
+          "query_text": "Should birth control pills be available over the counter?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.018868,
+            "ndcg": 0.053269
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002695,
+            "ndcg": 0.017756
+          }
+        },
+        "13": {
+          "query_text": "Can alternative energy effectively replace fossil fuels?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.030702,
+            "ndcg": 0.072536
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.036842,
+            "ndcg": 0.08895
+          }
+        },
+        "14": {
+          "query_text": "Is sexual orientation determined at birth?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.069488,
+            "ndcg": 0.312293
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.040821,
+            "ndcg": 0.220587
+          }
+        },
+        "15": {
+          "query_text": "Should animals be used for scientific or commercial testing?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.028267,
+            "ndcg": 0.120443
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.023303,
+            "ndcg": 0.109552
+          }
+        },
+        "16": {
+          "query_text": "Should prescription drugs be advertised directly to consumers?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.054067,
+            "ndcg": 0.205434
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.058929,
+            "ndcg": 0.247278
+          }
+        },
+        "17": {
+          "query_text": "Should recreational marijuana be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.004545,
+            "ndcg": 0.023858
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.018182,
+            "ndcg": 0.055397
+          }
+        },
+        "18": {
+          "query_text": "Should churches remain tax-exempt?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.051352,
+            "ndcg": 0.224063
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.036728,
+            "ndcg": 0.202935
+          }
+        },
+        "19": {
+          "query_text": "Should gay marriage be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "20": {
+          "query_text": "Is drinking milk healthy for humans?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.065603,
+            "ndcg": 0.178453
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.081324,
+            "ndcg": 0.207187
+          }
+        },
+        "21": {
+          "query_text": "Is human activity primarily responsible for global climate change?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.019608,
+            "ndcg": 0.110112
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.004902,
+            "ndcg": 0.047423
+          }
+        },
+        "22": {
+          "query_text": "Is a two-state solution an acceptable solution to the Israeli-Palestinian conflict?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.008586,
+            "ndcg": 0.164016
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.015152,
+            "ndcg": 0.164024
+          }
+        },
+        "23": {
+          "query_text": "Should euthanasia or physician-assisted suicide be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.069182,
+            "ndcg": 0.211117
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.031334,
+            "ndcg": 0.129274
+          }
+        },
+        "24": {
+          "query_text": "Does lowering the federal corporate income tax rate create jobs?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.048895,
+            "ndcg": 0.175978
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002232,
+            "ndcg": 0.021597
+          }
+        },
+        "26": {
+          "query_text": "Do standardized tests improve education?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.006536,
+            "ndcg": 0.089123
+          }
+        },
+        "27": {
+          "query_text": "Should more gun control laws be enacted?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.021739,
+            "ndcg": 0.021299
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "28": {
+          "query_text": "Should prostitution be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.001587,
+            "ndcg": 0.014366
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "29": {
+          "query_text": "Should the government allow illegal immigrants to become citizens?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.00463,
+            "ndcg": 0.010675
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003704,
+            "ndcg": 0.009589
+          }
+        },
+        "30": {
+          "query_text": "Should adults have the right to carry a concealed handgun?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002632,
+            "ndcg": 0.065781
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "31": {
+          "query_text": "Is obesity a disease?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.118674,
+            "ndcg": 0.551749
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.075595,
+            "ndcg": 0.420914
+          }
+        },
+        "32": {
+          "query_text": "Do electronic voting machines improve the voting process?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003322,
+            "ndcg": 0.045813
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "33": {
+          "query_text": "Should people become vegetarian?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.096154,
+            "ndcg": 0.470867
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.068681,
+            "ndcg": 0.447701
+          }
+        },
+        "34": {
+          "query_text": "Are social networking sites good for our society?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.062,
+            "ndcg": 0.137011
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.079619,
+            "ndcg": 0.222207
+          }
+        },
+        "35": {
+          "query_text": "Do violent video games contribute to youth violence?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.033234,
+            "ndcg": 0.126976
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "36": {
+          "query_text": "Is golf a sport?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.033761,
+            "ndcg": 0.228402
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.036203,
+            "ndcg": 0.228412
+          }
+        },
+        "37": {
+          "query_text": "Is cell phone radiation safe?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.054153,
+            "ndcg": 0.407663
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.005814,
+            "ndcg": 0.098007
+          }
+        },
+        "38": {
+          "query_text": "Should marijuana be a medical option?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002119,
+            "ndcg": 0.069431
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.014165,
+            "ndcg": 0.193908
+          }
+        },
+        "39": {
+          "query_text": "Should the federal minimum wage be increased?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.06147,
+            "ndcg": 0.225971
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003205,
+            "ndcg": 0.037935
+          }
+        },
+        "40": {
+          "query_text": "Should the death penalty be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.001709,
+            "ndcg": 0.032058
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.007473,
+            "ndcg": 0.043738
+          }
+        },
+        "41": {
+          "query_text": "Should student loan debt be easier to discharge in bankruptcy?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.044186,
+            "ndcg": 0.127468
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.02907,
+            "ndcg": 0.243107
+          }
+        },
+        "42": {
+          "query_text": "Should fighting be allowed in hockey?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.150794,
+            "ndcg": 0.215328
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.122917,
+            "ndcg": 0.242126
+          }
+        },
+        "43": {
+          "query_text": "Should bottled water be banned?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.109188,
+            "ndcg": 0.421819
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.111477,
+            "ndcg": 0.44217
+          }
+        },
+        "44": {
+          "query_text": "Should election day be a national holiday?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002915,
+            "ndcg": 0.017128
+          }
+        },
+        "45": {
+          "query_text": "Should the penny stay in circulation?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.029784,
+            "ndcg": 0.219477
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.027987,
+            "ndcg": 0.200537
+          }
+        },
+        "46": {
+          "query_text": "Should net neutrality be restored?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "47": {
+          "query_text": "Is homework beneficial?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.025641,
+            "ndcg": 0.087633
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.019231,
+            "ndcg": 0.049698
+          }
+        },
+        "48": {
+          "query_text": "Should the voting age be lowered?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.101327,
+            "ndcg": 0.366791
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.09189,
+            "ndcg": 0.411861
+          }
+        },
+        "49": {
+          "query_text": "Should body cameras be mandatory for police?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.031111,
+            "ndcg": 0.305235
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.025926,
+            "ndcg": 0.248908
+          }
+        },
+        "50": {
+          "query_text": "Should everyone get a universal basic income?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.009383,
+            "ndcg": 0.054969
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002778,
+            "ndcg": 0.03601
+          }
+        }
+      },
+      "averages": {
+        "without_refinement": {
+          "avg_precision": 0.3040816326530612,
+          "avg_map": 0.03854702040816326,
+          "avg_ndcg": 0.16108924489795917
+        },
+        "with_refinement": {
+          "avg_precision": 0.24081632653061225,
+          "avg_map": 0.028577836734693874,
+          "avg_ndcg": 0.1350920612244898
+        }
+      },
+      "improvement": {
+        "precision_diff": -0.06326530612244896,
+        "map_diff": -0.009969183673469387,
+        "ndcg_diff": -0.02599718367346937
+      },
+      "num_queries_processed": 49
+    },
+    "hybrid_parallel": {
+      "queries": {
+        "1": {
+          "query_text": "Should teachers get tenure?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.144697,
+            "ndcg": 0.438203
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.136364,
+            "ndcg": 0.332552
+          }
+        },
+        "2": {
+          "query_text": "Is vaping with e-cigarettes safe?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.143527,
+            "ndcg": 0.433097
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002469,
+            "ndcg": 0.02504
+          }
+        },
+        "3": {
+          "query_text": "Should insider trading be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.159091,
+            "ndcg": 0.551818
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.012175,
+            "ndcg": 0.078471
+          }
+        },
+        "4": {
+          "query_text": "Should corporal punishment be used in schools?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.185417,
+            "ndcg": 0.543824
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.180498,
+            "ndcg": 0.628657
+          }
+        },
+        "5": {
+          "query_text": "Should social security be privatized?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.174049,
+            "ndcg": 0.46209
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.164352,
+            "ndcg": 0.447102
+          }
+        },
+        "6": {
+          "query_text": "Is a college education worth it?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.17722,
+            "ndcg": 0.365029
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.125225,
+            "ndcg": 0.297247
+          }
+        },
+        "7": {
+          "query_text": "Should felons who have completed their sentence be allowed to vote?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.09434,
+            "ndcg": 0.332078
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.066038,
+            "ndcg": 0.340129
+          }
+        },
+        "8": {
+          "query_text": "Should abortion be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.090278,
+            "ndcg": 0.35305
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "9": {
+          "query_text": "Should students have to wear school uniforms?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.112,
+            "ndcg": 0.281062
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.065333,
+            "ndcg": 0.234766
+          }
+        },
+        "10": {
+          "query_text": "Should any vaccines be required for children?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.130853,
+            "ndcg": 0.375442
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.065561,
+            "ndcg": 0.268316
+          }
+        },
+        "11": {
+          "query_text": "Should performance-enhancing drugs be accepted in sports?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.105263,
+            "ndcg": 0.322808
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.084649,
+            "ndcg": 0.283962
+          }
+        },
+        "12": {
+          "query_text": "Should birth control pills be available over the counter?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.135198,
+            "ndcg": 0.253002
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.064465,
+            "ndcg": 0.145341
+          }
+        },
+        "13": {
+          "query_text": "Can alternative energy effectively replace fossil fuels?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.085965,
+            "ndcg": 0.206731
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.105263,
+            "ndcg": 0.232517
+          }
+        },
+        "14": {
+          "query_text": "Is sexual orientation determined at birth?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.082531,
+            "ndcg": 0.282683
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.118789,
+            "ndcg": 0.63025
+          }
+        },
+        "15": {
+          "query_text": "Should animals be used for scientific or commercial testing?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.055893,
+            "ndcg": 0.17618
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.033924,
+            "ndcg": 0.19063
+          }
+        },
+        "16": {
+          "query_text": "Should prescription drugs be advertised directly to consumers?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.139765,
+            "ndcg": 0.407375
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.132639,
+            "ndcg": 0.34793
+          }
+        },
+        "17": {
+          "query_text": "Should recreational marijuana be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.157525,
+            "ndcg": 0.386255
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.013333,
+            "ndcg": 0.144094
+          }
+        },
+        "18": {
+          "query_text": "Should churches remain tax-exempt?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.029982,
+            "ndcg": 0.174053
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.018519,
+            "ndcg": 0.106496
+          }
+        },
+        "19": {
+          "query_text": "Should gay marriage be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.089286,
+            "ndcg": 0.375244
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003571,
+            "ndcg": 0.042597
+          }
+        },
+        "20": {
+          "query_text": "Is drinking milk healthy for humans?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.191489,
+            "ndcg": 0.411527
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.135968,
+            "ndcg": 0.341668
+          }
+        },
+        "21": {
+          "query_text": "Is human activity primarily responsible for global climate change?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.111469,
+            "ndcg": 0.460281
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.079412,
+            "ndcg": 0.426122
+          }
+        },
+        "22": {
+          "query_text": "Is a two-state solution an acceptable solution to the Israeli-Palestinian conflict?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.102886,
+            "ndcg": 0.367302
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.107431,
+            "ndcg": 0.366129
+          }
+        },
+        "23": {
+          "query_text": "Should euthanasia or physician-assisted suicide be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.127022,
+            "ndcg": 0.453755
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.116435,
+            "ndcg": 0.402317
+          }
+        },
+        "24": {
+          "query_text": "Does lowering the federal corporate income tax rate create jobs?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.156944,
+            "ndcg": 0.560724
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.049554,
+            "ndcg": 0.305329
+          }
+        },
+        "26": {
+          "query_text": "Do standardized tests improve education?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.138593,
+            "ndcg": 0.569983
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.061874,
+            "ndcg": 0.433855
+          }
+        },
+        "27": {
+          "query_text": "Should more gun control laws be enacted?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.217391,
+            "ndcg": 0.472808
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.195652,
+            "ndcg": 0.467064
+          }
+        },
+        "28": {
+          "query_text": "Should prostitution be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.137522,
+            "ndcg": 0.559289
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.045666,
+            "ndcg": 0.293794
+          }
+        },
+        "29": {
+          "query_text": "Should the government allow illegal immigrants to become citizens?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.124669,
+            "ndcg": 0.30931
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.14213,
+            "ndcg": 0.360934
+          }
+        },
+        "30": {
+          "query_text": "Should adults have the right to carry a concealed handgun?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.154135,
+            "ndcg": 0.499604
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.149749,
+            "ndcg": 0.43415
+          }
+        },
+        "31": {
+          "query_text": "Is obesity a disease?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.098214,
+            "ndcg": 0.357695
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.051297,
+            "ndcg": 0.261307
+          }
+        },
+        "32": {
+          "query_text": "Do electronic voting machines improve the voting process?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.148062,
+            "ndcg": 0.416157
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.13469,
+            "ndcg": 0.424096
+          }
+        },
+        "33": {
+          "query_text": "Should people become vegetarian?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.101763,
+            "ndcg": 0.398298
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.062927,
+            "ndcg": 0.295481
+          }
+        },
+        "34": {
+          "query_text": "Are social networking sites good for our society?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.18,
+            "ndcg": 0.535317
+          },
+          "with_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.2,
+            "ndcg": 0.550017
+          }
+        },
+        "35": {
+          "query_text": "Do violent video games contribute to youth violence?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.155299,
+            "ndcg": 0.411428
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.075273,
+            "ndcg": 0.239163
+          }
+        },
+        "36": {
+          "query_text": "Is golf a sport?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.222151,
+            "ndcg": 0.503126
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.173789,
+            "ndcg": 0.477581
+          }
+        },
+        "37": {
+          "query_text": "Is cell phone radiation safe?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.204393,
+            "ndcg": 0.649056
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.017959,
+            "ndcg": 0.085881
+          }
+        },
+        "38": {
+          "query_text": "Should marijuana be a medical option?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.100188,
+            "ndcg": 0.365906
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "39": {
+          "query_text": "Should the federal minimum wage be increased?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.169017,
+            "ndcg": 0.507073
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.058547,
+            "ndcg": 0.333184
+          }
+        },
+        "40": {
+          "query_text": "Should the death penalty be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.046764,
+            "ndcg": 0.297785
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002564,
+            "ndcg": 0.017703
+          }
+        },
+        "41": {
+          "query_text": "Should student loan debt be easier to discharge in bankruptcy?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.162791,
+            "ndcg": 0.450005
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.162791,
+            "ndcg": 0.452094
+          }
+        },
+        "42": {
+          "query_text": "Should fighting be allowed in hockey?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.138203,
+            "ndcg": 0.268667
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.075866,
+            "ndcg": 0.236942
+          }
+        },
+        "43": {
+          "query_text": "Should bottled water be banned?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.202676,
+            "ndcg": 0.692963
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.228205,
+            "ndcg": 0.662609
+          }
+        },
+        "44": {
+          "query_text": "Should election day be a national holiday?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.101628,
+            "ndcg": 0.205706
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "45": {
+          "query_text": "Should the penny stay in circulation?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.105301,
+            "ndcg": 0.360041
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.110512,
+            "ndcg": 0.344057
+          }
+        },
+        "46": {
+          "query_text": "Should net neutrality be restored?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.130896,
+            "ndcg": 0.519952
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.033333,
+            "ndcg": 0.319112
+          }
+        },
+        "47": {
+          "query_text": "Is homework beneficial?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.134615,
+            "ndcg": 0.375036
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.028007,
+            "ndcg": 0.151357
+          }
+        },
+        "48": {
+          "query_text": "Should the voting age be lowered?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.15625,
+            "ndcg": 0.619206
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.001953,
+            "ndcg": 0.03601
+          }
+        },
+        "49": {
+          "query_text": "Should body cameras be mandatory for police?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.222222,
+            "ndcg": 0.908243
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.192531,
+            "ndcg": 0.712298
+          }
+        },
+        "50": {
+          "query_text": "Should everyone get a universal basic income?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.159136,
+            "ndcg": 0.407639
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.061481,
+            "ndcg": 0.232184
+          }
+        }
+      },
+      "averages": {
+        "without_refinement": {
+          "avg_precision": 0.7346938775510204,
+          "avg_map": 0.13662385714285713,
+          "avg_ndcg": 0.4211001224489796
+        },
+        "with_refinement": {
+          "avg_precision": 0.48571428571428565,
+          "avg_map": 0.08466863265306122,
+          "avg_ndcg": 0.29466397959183677
+        }
+      },
+      "improvement": {
+        "precision_diff": -0.2489795918367348,
+        "map_diff": -0.051955224489795906,
+        "ndcg_diff": -0.12643614285714283
+      },
+      "num_queries_processed": 49
+    },
+    "hybrid_serial": {
+      "queries": {
+        "1": {
+          "query_text": "Should teachers get tenure?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.144697,
+            "ndcg": 0.435831
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.106385,
+            "ndcg": 0.301627
+          }
+        },
+        "2": {
+          "query_text": "Is vaping with e-cigarettes safe?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.132787,
+            "ndcg": 0.414688
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.002222,
+            "ndcg": 0.024045
+          }
+        },
+        "3": {
+          "query_text": "Should insider trading be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.072601,
+            "ndcg": 0.395383
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.004545,
+            "ndcg": 0.039733
+          }
+        },
+        "4": {
+          "query_text": "Should corporal punishment be used in schools?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.1875,
+            "ndcg": 0.557911
+          },
+          "with_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.208333,
+            "ndcg": 0.668604
+          }
+        },
+        "5": {
+          "query_text": "Should social security be privatized?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.15787,
+            "ndcg": 0.398358
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.143229,
+            "ndcg": 0.4216
+          }
+        },
+        "6": {
+          "query_text": "Is a college education worth it?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.176426,
+            "ndcg": 0.359547
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.155405,
+            "ndcg": 0.355587
+          }
+        },
+        "7": {
+          "query_text": "Should felons who have completed their sentence be allowed to vote?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.132075,
+            "ndcg": 0.415269
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "8": {
+          "query_text": "Should abortion be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.097963,
+            "ndcg": 0.340043
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "9": {
+          "query_text": "Should students have to wear school uniforms?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.1,
+            "ndcg": 0.246748
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.046571,
+            "ndcg": 0.20431
+          }
+        },
+        "10": {
+          "query_text": "Should any vaccines be required for children?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.087351,
+            "ndcg": 0.294998
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.052579,
+            "ndcg": 0.186883
+          }
+        },
+        "11": {
+          "query_text": "Should performance-enhancing drugs be accepted in sports?",
+          "without_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.105263,
+            "ndcg": 0.322808
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.078947,
+            "ndcg": 0.254264
+          }
+        },
+        "12": {
+          "query_text": "Should birth control pills be available over the counter?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.118269,
+            "ndcg": 0.23674
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.045912,
+            "ndcg": 0.110637
+          }
+        },
+        "13": {
+          "query_text": "Can alternative energy effectively replace fossil fuels?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.122306,
+            "ndcg": 0.293917
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.1,
+            "ndcg": 0.226494
+          }
+        },
+        "14": {
+          "query_text": "Is sexual orientation determined at birth?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.082531,
+            "ndcg": 0.262189
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.108282,
+            "ndcg": 0.563292
+          }
+        },
+        "15": {
+          "query_text": "Should animals be used for scientific or commercial testing?",
+          "without_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.008865,
+            "ndcg": 0.079732
+          },
+          "with_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.022163,
+            "ndcg": 0.17903
+          }
+        },
+        "16": {
+          "query_text": "Should prescription drugs be advertised directly to consumers?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.142047,
+            "ndcg": 0.408914
+          },
+          "with_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.110243,
+            "ndcg": 0.35849
+          }
+        },
+        "17": {
+          "query_text": "Should recreational marijuana be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.159798,
+            "ndcg": 0.336694
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.015152,
+            "ndcg": 0.146522
+          }
+        },
+        "18": {
+          "query_text": "Should churches remain tax-exempt?",
+          "without_refinement": {
+            "precision_at_k": 0.3,
+            "map": 0.029982,
+            "ndcg": 0.174053
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.018519,
+            "ndcg": 0.106496
+          }
+        },
+        "19": {
+          "query_text": "Should gay marriage be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.089286,
+            "ndcg": 0.375244
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003571,
+            "ndcg": 0.042597
+          }
+        },
+        "20": {
+          "query_text": "Is drinking milk healthy for humans?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.212766,
+            "ndcg": 0.457888
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.170213,
+            "ndcg": 0.420587
+          }
+        },
+        "21": {
+          "query_text": "Is human activity primarily responsible for global climate change?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.106489,
+            "ndcg": 0.479613
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.071117,
+            "ndcg": 0.401913
+          }
+        },
+        "22": {
+          "query_text": "Is a two-state solution an acceptable solution to the Israeli-Palestinian conflict?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.10531,
+            "ndcg": 0.369578
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.107431,
+            "ndcg": 0.366129
+          }
+        },
+        "23": {
+          "query_text": "Should euthanasia or physician-assisted suicide be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.13826,
+            "ndcg": 0.4781
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.116435,
+            "ndcg": 0.402317
+          }
+        },
+        "24": {
+          "query_text": "Does lowering the federal corporate income tax rate create jobs?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.178571,
+            "ndcg": 0.619249
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.046344,
+            "ndcg": 0.299396
+          }
+        },
+        "26": {
+          "query_text": "Do standardized tests improve education?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.106489,
+            "ndcg": 0.515242
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.076797,
+            "ndcg": 0.48249
+          }
+        },
+        "27": {
+          "query_text": "Should more gun control laws be enacted?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.152174,
+            "ndcg": 0.41898
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.147343,
+            "ndcg": 0.41554
+          }
+        },
+        "28": {
+          "query_text": "Should prostitution be legal?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.135254,
+            "ndcg": 0.575425
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.093298,
+            "ndcg": 0.424321
+          }
+        },
+        "29": {
+          "query_text": "Should the government allow illegal immigrants to become citizens?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.116358,
+            "ndcg": 0.267936
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.109465,
+            "ndcg": 0.338014
+          }
+        },
+        "30": {
+          "query_text": "Should adults have the right to carry a concealed handgun?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.176316,
+            "ndcg": 0.490604
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.154762,
+            "ndcg": 0.516336
+          }
+        },
+        "31": {
+          "query_text": "Is obesity a disease?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.098214,
+            "ndcg": 0.360294
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.024245,
+            "ndcg": 0.151941
+          }
+        },
+        "32": {
+          "query_text": "Do electronic voting machines improve the voting process?",
+          "without_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.104983,
+            "ndcg": 0.35194
+          }
+        },
+        "33": {
+          "query_text": "Should people become vegetarian?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.106571,
+            "ndcg": 0.452868
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.041758,
+            "ndcg": 0.188305
+          }
+        },
+        "34": {
+          "query_text": "Are social networking sites good for our society?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.152421,
+            "ndcg": 0.584029
+          },
+          "with_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.2,
+            "ndcg": 0.621266
+          }
+        },
+        "35": {
+          "query_text": "Do violent video games contribute to youth violence?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.103819,
+            "ndcg": 0.455008
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.055556,
+            "ndcg": 0.235102
+          }
+        },
+        "36": {
+          "query_text": "Is golf a sport?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.181237,
+            "ndcg": 0.43222
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.173789,
+            "ndcg": 0.511713
+          }
+        },
+        "37": {
+          "query_text": "Is cell phone radiation safe?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.178488,
+            "ndcg": 0.645796
+          },
+          "with_refinement": {
+            "precision_at_k": 0.1,
+            "map": 0.003322,
+            "ndcg": 0.007341
+          }
+        },
+        "38": {
+          "query_text": "Should marijuana be a medical option?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.093059,
+            "ndcg": 0.376393
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "39": {
+          "query_text": "Should the federal minimum wage be increased?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.169017,
+            "ndcg": 0.499198
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.044231,
+            "ndcg": 0.260358
+          }
+        },
+        "40": {
+          "query_text": "Should the death penalty be allowed?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.041099,
+            "ndcg": 0.292209
+          },
+          "with_refinement": {
+            "precision_at_k": 0.2,
+            "map": 0.005617,
+            "ndcg": 0.08282
+          }
+        },
+        "41": {
+          "query_text": "Should student loan debt be easier to discharge in bankruptcy?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.181395,
+            "ndcg": 0.511667
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.162791,
+            "ndcg": 0.448362
+          }
+        },
+        "42": {
+          "query_text": "Should fighting be allowed in hockey?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.142803,
+            "ndcg": 0.331728
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.079545,
+            "ndcg": 0.252537
+          }
+        },
+        "43": {
+          "query_text": "Should bottled water be banned?",
+          "without_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.2,
+            "ndcg": 0.712601
+          },
+          "with_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.230769,
+            "ndcg": 0.637127
+          }
+        },
+        "44": {
+          "query_text": "Should election day be a national holiday?",
+          "without_refinement": {
+            "precision_at_k": 0.6,
+            "map": 0.122449,
+            "ndcg": 0.240824
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "45": {
+          "query_text": "Should the penny stay in circulation?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.110018,
+            "ndcg": 0.36956
+          },
+          "with_refinement": {
+            "precision_at_k": 0.8,
+            "map": 0.146488,
+            "ndcg": 0.380924
+          }
+        },
+        "46": {
+          "query_text": "Should net neutrality be restored?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.13288,
+            "ndcg": 0.55634
+          },
+          "with_refinement": {
+            "precision_at_k": 0.4,
+            "map": 0.057143,
+            "ndcg": 0.381763
+          }
+        },
+        "47": {
+          "query_text": "Is homework beneficial?",
+          "without_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.134615,
+            "ndcg": 0.37108
+          },
+          "with_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.0414,
+            "ndcg": 0.229748
+          }
+        },
+        "48": {
+          "query_text": "Should the voting age be lowered?",
+          "without_refinement": {
+            "precision_at_k": 0.9,
+            "map": 0.139063,
+            "ndcg": 0.592585
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        },
+        "49": {
+          "query_text": "Should body cameras be mandatory for police?",
+          "without_refinement": {
+            "precision_at_k": 1.0,
+            "map": 0.222222,
+            "ndcg": 0.910841
+          },
+          "with_refinement": {
+            "precision_at_k": 0.7,
+            "map": 0.152778,
+            "ndcg": 0.577444
+          }
+        },
+        "50": {
+          "query_text": "Should everyone get a universal basic income?",
+          "without_refinement": {
+            "precision_at_k": 0.5,
+            "map": 0.107407,
+            "ndcg": 0.330773
+          },
+          "with_refinement": {
+            "precision_at_k": 0.0,
+            "map": 0.0,
+            "ndcg": 0.0
+          }
+        }
+      },
+      "averages": {
+        "without_refinement": {
+          "avg_precision": 0.6836734693877551,
+          "avg_map": 0.12637512244897958,
+          "avg_ndcg": 0.40913665306122454
+        },
+        "with_refinement": {
+          "avg_precision": 0.45102040816326533,
+          "avg_map": 0.0783607755102041,
+          "avg_ndcg": 0.2770601020408163
+        }
+      },
+      "improvement": {
+        "precision_diff": -0.23265306122448975,
+        "map_diff": -0.04801434693877549,
+        "ndcg_diff": -0.13207655102040822
+      },
+      "num_queries_processed": 49
+    }
+  },
+  "total_queries": 49
+}
