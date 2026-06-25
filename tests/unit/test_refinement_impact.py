@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 """
-سكربت لتقييم تأثير التصحيح الإملائي (Spell Checking فقط) على جميع النماذج.
-يقوم بتشغيل البحث لكل استعلام (49) مرتين: بدون تحسين و مع تحسين (تصحيح إملائي فقط).
+سكربت لتقييم تأثير Query Refinement (تصحيح إملائي + مرادفات) على جميع النماذج.
+يقوم بتشغيل البحث لكل استعلام (49) مرتين: بدون تحسين و مع تحسين.
 ويحسب متوسط المقاييس (MAP, Precision@10, NDCG) لكل نموذج.
 """
 
@@ -44,7 +44,7 @@ from app import (
 # إعدادات التجربة
 # ============================================================
 TOP_K = 10
-OUTPUT_FILE = "refinement_impact_spellcheck_only.json"
+OUTPUT_FILE = "refinement_impact_results.json"
 
 # أفضل الأوزان للهجين المتوازي من تجاربك السابقة
 BEST_PARALLEL_WEIGHTS = {
@@ -100,7 +100,7 @@ def run_search_for_query(query_text, model, assets, refine=False, **kwargs):
 
 def run_experiment():
     print("="*80)
-    print("🚀 بدء تجربة تأثير التصحيح الإملائي (Spell Checking فقط) على جميع النماذج...")
+    print("🚀 بدء تجربة تأثير Query Refinement على جميع النماذج...")
     print("="*80)
     print(f"   - عدد النتائج (Top-K): {TOP_K}")
     print(f"   - عدد النماذج: 5 (TF-IDF, BM25, BERT, Hybrid Parallel, Hybrid Serial)")
@@ -152,7 +152,7 @@ def run_experiment():
                 model_data['without_refinement']['metrics'].append(metrics_no_ref)
                 query_details[qid]['without_refinement'] = metrics_no_ref
                 
-                # 2. البحث مع تحسين (تصحيح إملائي فقط)
+                # 2. البحث مع تحسين
                 results_ref = run_search_for_query(query_text, model_name, assets, refine=True)
                 metrics_ref = compute_evaluation_metrics(results_ref, qrels, TOP_K)
                 model_data['with_refinement']['metrics'].append(metrics_ref)
@@ -215,7 +215,7 @@ def run_experiment():
     # عرض جدول المقارنة النهائي (ملخص)
     # ============================================================
     print("\n" + "="*80)
-    print("📊 ملخص تأثير التصحيح الإملائي على جميع النماذج")
+    print("📊 ملخص تأثير Query Refinement على جميع النماذج")
     print("="*80)
     print(f"{'النموذج':<18} {'MAP (بدون)':<12} {'MAP (مع)':<12} {'التحسين':<12} {'P@10 (بدون)':<12} {'P@10 (مع)':<12}")
     print("-"*90)
@@ -268,8 +268,8 @@ def run_experiment():
     else:
         print("⚠️ لم يتم العثور على بيانات كافية للتوصية.")
     
-    print("\n💡 ملاحظة: التحسين الحالي يقتصر على التصحيح الإملائي فقط (بدون مرادفات).")
-    print("   هذا النهج يحافظ على الأداء الأساسي مع إضافة فائدة تصحيح الأخطاء الإملائية.")
+    print("\n💡 ملاحظة: التحسين الحالي (تصحيح إملائي + مرادفات) قد يحسن الأداء بشكل طفيف.")
+    print("   النتائج أعلاه ستظهر الفرق الفعلي بالأرقام.")
     
     return results_summary
 

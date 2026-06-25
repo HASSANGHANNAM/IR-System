@@ -8,56 +8,34 @@
 
 import os
 import sys
-import json
 import pickle
 import numpy as np
 from pathlib import Path
-import faiss
+import faiss  # تأكد من تثبيت المكتبة: pip install faiss-cpu
 
 # ===== إعداد المسارات =====
 ROOT = Path(__file__).resolve().parent
 MODELS_DIR = ROOT / 'models'
-DATA_DIR = ROOT / 'data'
-DOCUMENTS_JSONL_PATH = DATA_DIR / 'processed_stemming' / 'corpus_original.jsonl'
 
 # التأكد من وجود مجلد models
 MODELS_DIR.mkdir(exist_ok=True)
 
-# ===== 1. تحميل معرفات الوثائق الحقيقية (Doc IDs) من corpus_original.jsonl =====
+# ===== 1. تحميل معرفات الوثائق (Doc IDs) =====
+# نحاول تحميلها من ملف doc_ids.pkl أو من ملف JSON
+doc_ids_path = MODELS_DIR / 'doc_ids.pkl'
 doc_ids_list = []
 
-if DOCUMENTS_JSONL_PATH.exists():
-    print(f"📂 جاري تحميل المعرفات الحقيقية من {DOCUMENTS_JSONL_PATH}...")
-    with open(DOCUMENTS_JSONL_PATH, 'r', encoding='utf-8') as f:
-        for line in f:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                data = json.loads(line)
-                doc_id = data.get('doc_id')
-                if doc_id is not None:
-                    doc_ids_list.append(str(doc_id))
-            except Exception:
-                continue
-    print(f"✅ تم تحميل {len(doc_ids_list)} معرف وثيقة حقيقي من corpus_original.jsonl")
-else:
-    print(f"⚠️ لم يتم العثور على {DOCUMENTS_JSONL_PATH}")
+if doc_ids_path.exists():
+    try:
+        with open(doc_ids_path, 'rb') as f:
+            doc_ids_list = pickle.load(f)
+        print(f"✅ تم تحميل {len(doc_ids_list)} معرف وثيقة من {doc_ids_path}")
+    except Exception as e:
+        print(f"⚠️ فشل تحميل doc_ids.pkl: {e}")
 
-# إذا لم نجد الملف، نحاول تحميل doc_ids.pkl كحل احتياطي
+# إذا لم نجد doc_ids.pkl، نحاول إنشاء قائمة افتراضية بناءً على حجم المصفوفة
 if not doc_ids_list:
-    doc_ids_pkl_path = MODELS_DIR / 'doc_ids.pkl'
-    if doc_ids_pkl_path.exists():
-        try:
-            with open(doc_ids_pkl_path, 'rb') as f:
-                doc_ids_list = pickle.load(f)
-            print(f"✅ تم تحميل {len(doc_ids_list)} معرف من doc_ids.pkl")
-        except Exception as e:
-            print(f"⚠️ فشل تحميل doc_ids.pkl: {e}")
-
-# إذا لم نجد أي شيء، نستخدم أرقاماً افتراضية
-if not doc_ids_list:
-    print("⚠️ لم يتم العثور على أي معرفات حقيقية. سيتم إنشاء معرفات رقمية افتراضية.")
+    print("⚠️ لم يتم العثور على doc_ids.pkl. سيتم إنشاء معرفات رقمية افتراضية.")
     # سنحدد العدد لاحقاً بعد تحميل المصفوفة
 
 # ===== 2. بناء فهرس FAISS للنص (Text Embeddings) =====
@@ -70,17 +48,6 @@ if not text_embeddings_path.exists():
 print(f"📂 جاري تحميل {text_embeddings_path}...")
 embeddings_text = np.load(text_embeddings_path, mmap_mode='r')
 print(f"✅ تم تحميل المصفوفة: shape = {embeddings_text.shape}")
-
-# إذا لم تكن doc_ids_list محملة، ننشئها بناءً على حجم المصفوفة
-if not doc_ids_list:
-    doc_ids_list = [str(i) for i in range(embeddings_text.shape[0])]
-    print(f"⚠️ تم إنشاء {len(doc_ids_list)} معرف وثيقة افتراضي (أرقام تسلسلية).")
-
-# التأكد من تطابق العدد
-if len(doc_ids_list) != embeddings_text.shape[0]:
-    print(f"⚠️ عدد المعرفات ({len(doc_ids_list)}) لا يتطابق مع عدد المتجهات ({embeddings_text.shape[0]})")
-    print("سيتم استخدام عدد المتجهات كمرجع وإعادة إنشاء المعرفات.")
-    doc_ids_list = [str(i) for i in range(embeddings_text.shape[0])]
 
 # تحويل إلى float32 (FAISS يتطلب float32)
 embeddings_text = embeddings_text.astype(np.float32)
@@ -125,12 +92,20 @@ if title_embeddings_path.exists():
 else:
     print("ℹ️ ملف embeddings_title.npy غير موجود، سيتم تخطي بناء فهرس العناوين.")
 
-# ===== 4. حفظ معرفات الوثائق (Doc IDs) بالترتيب الصحيح =====
+# ===== 4. حفظ معرفات الوثائق (Doc IDs) =====
+# إذا لم تكن doc_ids_list محملة، ننشئها بناءً على حجم الفهرس
+if not doc_ids_list:
+    # نحاول معرفة العدد من الفهرس الذي بنيناه
+    # نقرأ عدد المتجهات من الفهرس (نفس عدد doc_ids)
+    num_vectors = index_text.ntotal
+    doc_ids_list = [str(i) for i in range(num_vectors)]
+    print(f"⚠️ تم إنشاء {num_vectors} معرف وثيقة افتراضي (أرقام تسلسلية).")
+
+# حفظ doc_ids_list
 doc_ids_save_path = MODELS_DIR / 'faiss_doc_ids.pkl'
 with open(doc_ids_save_path, 'wb') as f:
     pickle.dump(doc_ids_list, f)
 print(f"✅ تم حفظ معرفات الوثائق ({len(doc_ids_list)}) في {doc_ids_save_path}")
 
 print("\n🎉 تم الانتهاء من بناء جميع فهارس FAISS بنجاح!")
-print("📌 المعرفات محملة من corpus_original.jsonl (متطابقة مع app.py).")
 print("يمكنك الآن تشغيل الخادم (app.py) وسيستخدم FAISS تلقائياً عند تفعيل الخيار في الواجهة.")

@@ -1,32 +1,80 @@
-# ===== Python =====
+# ===============================================
+# .gitignore for IR-System Project
+# ===============================================
+
+# ===== Python / Bytecode =====
 __pycache__/
+*.py[cod]
 *.pyc
 *.pyo
 *.pyd
 *.so
+*.egg-info/
+dist/
+build/
+*.egg
 
-# ===== Virtual Environment =====
+# ===== Virtual Environments =====
 venv/
 .venv/
 env/
 ENV/
 env.bak/
 venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
 
-# ===== IDE =====
+# ===== IDE / Editor =====
 .vscode/
 .idea/
 *.swp
 *.swo
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# ===== Project Data (ضخمة أو مؤقتة) =====
+# ===== Environment Variables =====
+.env
+.flaskenv
+.env.local
+.env.*.local
+
+# ===== Logs =====
+logs/
+*.log
+*.tmp
+*.temp
+
+# ===== Cache =====
+.cache/
+.nltk_data/
+huggingface_cache/
+*.cache
+
+# ===== Databases (SQLite, etc.) =====
 *.db
-ir_data.db
-*.sqlite3
 *.sqlite
+*.sqlite3
+ir_data.db
+data/ir_data.db
 
-# ===== Models & Embeddings (ضخمة جداً) =====
+# ===== Data / Datasets (large) =====
+data/raw/
+data/processed_lemmatization/
+data/processed_stemming/
+*.jsonl
+*.jsonl.gz
+*.csv
+*.tsv
+*.parquet
+*.xlsx
+*.xls
+
+# ===== Models & Embeddings (heavy) =====
+models/
 *.npy
 *.npz
 *.pkl
@@ -34,23 +82,50 @@ ir_data.db
 *.h5
 *.pb
 *.onnx
+*.pt
+*.pth
+*.bin
 
-# ===== Datasets (ضخمة) =====
+# ===== Archives / Compressed Files =====
+archives/
 *.zip
 *.tar.gz
 *.tgz
 *.rar
 *.7z
-*.jsonl
-*.jsonl.gz
-*.csv
-*.tsv
+*.gz
+*.bz2
 
-# ===== Logs & Cache =====
-*.log
+# ===== Test / Temporary Outputs =====
 *.tmp
-*.temp
-.cache/
-.nltk_data/
-huggingface_cache/
-models/
+temp/
+*.out
+*.err
+
+# ===== OS / System =====
+Thumbs.db
+*.~
+
+# ===== Jupyter Notebook Checkpoints (keep .ipynb) =====
+.ipynb_checkpoints/
+
+# ===== Coverage / Reports =====
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# ===== Misc =====
+*.swp
+*.swo
+*.log
+*.pid
+*.seed
+*.pid.lock
