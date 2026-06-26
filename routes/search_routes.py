@@ -43,21 +43,35 @@ def init_search_routes(retrieval_service, ranking_service, db_manager, cache_man
             if not query.strip():
                 return jsonify({'error': 'Query is required.'}), 400
             
-            # ===== التحقق من query_id للتقييم =====
+            # ============================================================
+            # ✅ التحقق من التقييم: يتم التقييم فقط للاستعلامات المحفوظة (49)
+            # وإذا كان النص المرسل لا يطابق النص المخزن، نعطّل التقييم.
+            # ============================================================
+            evaluation_warning = None
             if evaluate:
                 if not query_id:
                     return jsonify({
                         'error': 'query_id is required when evaluate is enabled.'
                     }), 400
                 
-                query_text = db_manager.get_query_text_by_id(query_id)
-                if query_text is None:
+                stored_query_text = db_manager.get_query_text_by_id(query_id)
+                if stored_query_text is None:
                     return jsonify({
                         'warning': f'Query ID "{query_id}" not found in database.',
                         'message': 'Evaluation is only available for the 49 predefined queries.',
                         'evaluation_available': False,
                         'suggestion': 'Use one of the available query IDs from /api/queries'
-                    }), 200  # 200 عشان الواجهة تتعامل معاه كـ response عادي مش error
+                    }), 200
+                
+                # مقارنة النص المرسل مع النص المخزن (بعد إزالة المسافات وتحويل الحروف)
+                if query.strip().lower() != stored_query_text.strip().lower():
+                    # النص لا يطابق → نعطّل التقييم ونضيف تحذيراً
+                    evaluate = False
+                    evaluation_warning = (
+                        f'Query text does not match the stored query for ID "{query_id}". '
+                        'Evaluation skipped. To evaluate, use the exact original query text.'
+                    )
+                    logger.warning(evaluation_warning)
             
             # Apply query refinement if requested
             if refine:
@@ -76,7 +90,7 @@ def init_search_routes(retrieval_service, ranking_service, db_manager, cache_man
                 model,
                 top_k,
                 refine,
-                evaluate,
+                evaluate,  # قد تكون False بعد التعديل
                 use_faiss,
                 hybrid_mode,
                 weights_key,
@@ -87,6 +101,10 @@ def init_search_routes(retrieval_service, ranking_service, db_manager, cache_man
             cached_result = cache_manager.get(cache_key, 'query')
             if cached_result is not None:
                 logger.info(f"Cache hit for query: {query[:30]}...")
+                # إذا كان هناك تحذير تقييم، نضيفه للرد المخزن
+                if evaluation_warning:
+                    cached_result = cached_result.copy()
+                    cached_result['evaluation_warning'] = evaluation_warning
                 return jsonify(cached_result)
             
             logger.info(f"Cache miss for query: {query[:30]}...")
@@ -127,10 +145,16 @@ def init_search_routes(retrieval_service, ranking_service, db_manager, cache_man
                 if hybrid_mode == 'parallel':
                     payload['weights'] = weights
             
-            # Add evaluation metrics if requested
+            # ===== إضافة التقييم فقط إذا كان مفعلاً (وتم التحقق من تطابق النص) =====
             if evaluate and query_id:
                 eval_payload = ranking_service.build_evaluation_payload(results, query_id, top_k)
                 payload.update(eval_payload)
+            
+            # ===== إضافة تحذير التقييم إذا كان موجوداً =====
+            if evaluation_warning:
+                payload['evaluation_warning'] = evaluation_warning
+                payload['evaluation_available'] = False  # أو True إذا أردت إعلاماً
+                # ولكن بما أننا عطلنا التقييم، فهو غير متاح.
             
             # ===== تخزين النتيجة في الكاش =====
             cache_manager.set(cache_key, payload, 'query')

@@ -1,0 +1,411 @@
+{
+  "info": {
+    "name": "IR-System API",
+    "description": "Information Retrieval System - Search, Evaluation, Admin & Charts APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "ir-system-collection"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:5000",
+      "type": "string",
+      "description": "Base URL for the IR-System server (change to your server IP if needed)"
+    }
+  ],
+  "item": [
+    {
+      "name": "Search",
+      "description": "Search endpoints",
+      "item": [
+        {
+          "name": "Search (TF-IDF)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"tfidf\",\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": false,\n  \"use_faiss\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search (BM25)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"bm25\",\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": false,\n  \"bm25_k1\": 2.0,\n  \"bm25_b\": 0.60\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search (BERT)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"bert\",\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": false,\n  \"use_faiss\": false,\n  \"use_title\": true,\n  \"alpha\": 0.4\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search (BERT with FAISS)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"bert\",\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": false,\n  \"use_faiss\": true,\n  \"use_title\": true,\n  \"alpha\": 0.4\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search (Hybrid - Parallel)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"hybrid\",\n  \"hybrid_mode\": \"parallel\",\n  \"weights\": {\n    \"tfidf\": 0.3,\n    \"bm25\": 0.3,\n    \"bert\": 0.4\n  },\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": false,\n  \"use_faiss\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search (Hybrid - Parallel with FAISS)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"hybrid\",\n  \"hybrid_mode\": \"parallel\",\n  \"weights\": {\n    \"tfidf\": 0.3,\n    \"bm25\": 0.3,\n    \"bert\": 0.4\n  },\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": false,\n  \"use_faiss\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search (Hybrid - Serial)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"hybrid\",\n  \"hybrid_mode\": \"serial\",\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search with Refinement",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"model\": \"bm25\",\n  \"top_k\": 10,\n  \"refine\": true,\n  \"evaluate\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search with Evaluation (Predefined Query)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"Should teachers get tenure?\",\n  \"query_id\": \"1\",\n  \"model\": \"tfidf\",\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        },
+        {
+          "name": "Search with Evaluation (Non-existing Query ID - returns warning)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"My custom query\",\n  \"query_id\": \"999999\",\n  \"model\": \"tfidf\",\n  \"top_k\": 10,\n  \"refine\": false,\n  \"evaluate\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/search",
+              "host": ["{{base_url}}"],
+              "path": ["api", "search"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Documents",
+      "description": "Document endpoints",
+      "item": [
+        {
+          "name": "Get Document by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/document/b0680508-2019-04-18T13:48:51Z-00002-000",
+              "host": ["{{base_url}}"],
+              "path": ["api", "document", "b0680508-2019-04-18T13:48:51Z-00002-000"]
+            }
+          }
+        },
+        {
+          "name": "Get Document - Non-existing (404)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/document/non-existing-doc-id",
+              "host": ["{{base_url}}"],
+              "path": ["api", "document", "non-existing-doc-id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Queries",
+      "description": "Get predefined queries",
+      "item": [
+        {
+          "name": "Get All Queries (49 Predefined)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/queries",
+              "host": ["{{base_url}}"],
+              "path": ["api", "queries"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Charts",
+      "description": "Chart data endpoints",
+      "item": [
+        {
+          "name": "Model Comparison Chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/chart/model_comparison",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chart", "model_comparison"]
+            }
+          }
+        },
+        {
+          "name": "BM25 Parameters Chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/chart/bm25_params",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chart", "bm25_params"]
+            }
+          }
+        },
+        {
+          "name": "Hybrid Weights Chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/chart/hybrid_weights",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chart", "hybrid_weights"]
+            }
+          }
+        },
+        {
+          "name": "Serial Permutations Chart",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/chart/serial_permutations",
+              "host": ["{{base_url}}"],
+              "path": ["api", "chart", "serial_permutations"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "description": "Admin endpoints",
+      "item": [
+        {
+          "name": "Get System Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/status",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "status"]
+            }
+          }
+        },
+        {
+          "name": "Clear Cache (All)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"all\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/cache/clear",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "cache", "clear"]
+            }
+          }
+        },
+        {
+          "name": "Load Model (BM25)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/models/load/bm25",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "models", "load", "bm25"]
+            }
+          }
+        },
+        {
+          "name": "Load Model (BERT)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/models/load/bert",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "models", "load", "bert"]
+            }
+          }
+        },
+        {
+          "name": "Unload All Models",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/models/unload",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "models", "unload"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

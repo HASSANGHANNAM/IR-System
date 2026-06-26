@@ -214,6 +214,109 @@
         #evalStats {
             display: none;
         }
+
+        /* ===== أزرار التقرير والـ GitHub ===== */
+        .btn-link {
+            display: inline-block;
+            padding: 12px 32px;
+            border: none;
+            border-radius: 999px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px 10px 5px 0;
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .btn-link i {
+            margin-right: 8px;
+        }
+
+        .btn-report {
+            background: linear-gradient(135deg, #6b7dff, #7c5cfc);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(106, 114, 255, 0.3);
+        }
+
+        .btn-report:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(106, 114, 255, 0.5);
+            background: linear-gradient(135deg, #7c8cff, #8c6cfc);
+        }
+
+        .btn-github {
+            background: linear-gradient(135deg, #2d2d2d, #1a1a1a);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-github:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            background: linear-gradient(135deg, #3d3d3d, #2a2a2a);
+        }
+
+        /* ===== رسالة الشكر ===== */
+        .thank-you-section {
+            margin-top: 25px;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, rgba(106, 114, 255, 0.08), rgba(124, 92, 252, 0.05));
+            border: 1px solid rgba(106, 114, 255, 0.15);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .thank-you-section h3 {
+            color: #c5d2ff;
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+
+        .thank-you-section p {
+            color: #aab8cc;
+            margin: 0;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .thank-you-section .heart {
+            color: #ff6b8a;
+            display: inline-block;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .btn-link {
+                min-width: 140px;
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 
@@ -541,20 +644,103 @@
                 </div>
             </section>
 
-            <!-- صفحة About -->
+            <!-- ===== صفحة About (المطورة) ===== -->
             <section id="aboutPage" class="page-section">
                 <div class="panel-card overview-card">
                     <div class="panel-header">
-                        <h2>About</h2>
+                        <h2>About IR-System</h2>
                     </div>
                     <div class="summary-box">
-                        <p>This is the IR-System search engine built for the Information Retrieval course project.</p>
-                        <p>Dataset: beir/webis-touche2020 (382,545 documents, 49 queries).</p>
-                        <p>Model: TF-IDF with Stemming preprocessing.</p>
-                        <p>Developed with Flask, SQLite, and NLTK.</p>
+                        <p><strong>IR-System</strong> is a modular, high-performance <strong>Information Retrieval (IR)
+                                Search Engine</strong> built for the IR Course Project.</p>
+
+                        <h3>📊 Dataset</h3>
+                        <p><strong>BEIR / Webis‑Touche‑2020</strong> – a benchmark collection for argument retrieval
+                            containing:</p>
+                        <ul>
+                            <li><strong>382,545</strong> documents</li>
+                            <li><strong>49</strong> queries with relevance judgments (qrels)</li>
+                        </ul>
+
+                        <h3>🧠 Search Models</h3>
+                        <ul>
+                            <li><strong>TF‑IDF</strong> – Vector space model with cosine similarity</li>
+                            <li><strong>BM25</strong> – Probabilistic retrieval with tunable parameters
+                                (<code>k1</code>, <code>b</code>)</li>
+                            <li><strong>BERT</strong> – Dense retrieval using Sentence‑Transformers (all‑MiniLM‑L6‑v2)
+                            </li>
+                            <li><strong>Hybrid</strong> – Weighted combination of TF‑IDF + BM25 + BERT (Parallel/Serial
+                                modes)</li>
+                        </ul>
+                        <p><strong>FAISS</strong> acceleration is available for BERT to speed up semantic search.</p>
+
+                        <h3>⚙️ Key Features</h3>
+                        <ul>
+                            <li><strong>Query Refinement</strong> – Spell‑checking and duplicate removal</li>
+                            <li><strong>Evaluation Metrics</strong> – Precision@k, MAP, NDCG, Recall@k</li>
+                            <li><strong>Interactive Charts</strong> – Model comparison, BM25 tuning, Hybrid weights,
+                                Serial permutations</li>
+                            <li><strong>Intelligent Caching</strong> – LRU cache for faster repeated queries</li>
+                            <li><strong>Service‑Oriented Architecture (SOA)</strong> – Clean separation of Routes,
+                                Services, and Infrastructure</li>
+                        </ul>
+
+                        <h3>🛠️ Tech Stack</h3>
+                        <ul>
+                            <li><strong>Backend:</strong> Python 3.14, Flask, Werkzeug</li>
+                            <li><strong>Search & NLP:</strong> Sentence‑Transformers (BERT), FAISS, Rank‑BM25,
+                                Scikit‑learn, NLTK</li>
+                            <li><strong>Data Processing:</strong> NumPy, SciPy</li>
+                            <li><strong>Database:</strong> SQLite</li>
+                            <li><strong>Frontend:</strong> HTML5, CSS3, JavaScript (Chart.js)</li>
+                        </ul>
+
+                        <h3>👥 Team Members</h3>
+                        <ul>
+                            <li><strong>Hassan Ghanam</strong></li>
+                            <li><strong>Ghaith Abo Rashed</strong></li>
+                            <li><strong>Abd Alrahman Houir</strong></li>
+                            <li><strong>Alaa Suliman</strong></li>
+                        </ul>
+
+                        <h3>🔗 Links</h3>
+                        <div class="btn-group">
+                            <a href="https://github.com/HASSANGHANNAM/IR-System" target="_blank"
+                                class="btn-link btn-github">
+                                🐙 View on GitHub
+                            </a>
+                            <a href="https://drive.google.com/file/d/11ntBFJ_i-cg8olU054tEK8DcghbQ8QTc/view?usp=sharing"
+                                target="_blank" class="btn-link btn-report">
+                                📄 Full Report
+                            </a>
+                        </div>
+
+                        <!-- ===== 🙏 رسالة الشكر ===== -->
+                        <div class="thank-you-section">
+                            <h3>🙏 Thank You for Using IR-System!</h3>
+                            <p>
+                                We sincerely appreciate your interest in our project.
+                                This system was built with passion and dedication to provide
+                                an efficient and user-friendly search experience.
+                                <br><br>
+                                Your feedback and support mean the world to us.
+                                If you find this project useful, please consider starring it on GitHub
+                                and sharing it with others who might benefit from it.
+                                Every contribution helps us grow and improve.
+                                <br><br>
+                                <span class="heart">❤️</span>
+                                Made with love by the IR-System Team
+                                <span class="heart">❤️</span>
+                            </p>
+                        </div>
+                        <!-- ===== نهاية رسالة الشكر ===== -->
+
+                        <h3>📄 License</h3>
+                        <p>This project is developed for educational and research purposes.</p>
                     </div>
                 </div>
             </section>
+
         </main>
     </div>
 

@@ -63,7 +63,9 @@ let lastSearchResponse = null;
 let lastQueryId = null;
 let chartInstance = null;
 
+// ============================================================
 // ===== Navigation =====
+// ============================================================
 const switchPage = (targetId) => {
     pageSections.forEach((section) => {
         section.classList.toggle('active', section.id === targetId);
@@ -77,7 +79,9 @@ navButtons.forEach((button) => {
     button.addEventListener('click', () => switchPage(button.dataset.target));
 });
 
+// ============================================================
 // ===== Load Queries =====
+// ============================================================
 const loadQueries = async () => {
     if (!querySelect) return;
     try {
@@ -100,20 +104,97 @@ const loadQueries = async () => {
     }
 };
 
-if (querySelect) {
-    querySelect.addEventListener('change', () => {
-        const selectedOption = querySelect.selectedOptions[0];
-        if (selectedOption && selectedOption.dataset.queryText) {
-            queryInput.value = selectedOption.dataset.queryText;
-            lastQueryId = selectedOption.value;
-        }
+loadQueries();
+
+// ============================================================
+// ===== ✅ إدارة query_id عند تغيير النص / مسحه =====
+// ============================================================
+
+/**
+ * إلغاء اختيار الاستعلام المحفوظ ومسح query_id
+ * يتم استدعاؤها عندما يعدل المستخدم النص يدوياً أو يمسحه
+ */
+function clearSelectedQuery() {
+    if (querySelect) {
+        querySelect.value = '';
+        // إلغاء التحديد الواضح في القائمة
+        querySelect.selectedIndex = 0;
+    }
+    lastQueryId = null;
+    // إغلاق القائمة المنسدلة إذا كانت مفتوحة
+    if (querySelect && querySelect.classList.contains('show')) {
         querySelect.classList.remove('show');
         querySelect.style.opacity = '0';
         querySelect.style.pointerEvents = 'none';
-    });
+    }
 }
 
-loadQueries();
+// ===== 1. عند تعديل النص يدوياً =====
+queryInput.addEventListener('input', function () {
+    // إذا كان النص فارغاً، نمسح query_id
+    if (this.value.trim() === '') {
+        clearSelectedQuery();
+    } else {
+        // إذا كان هناك نص، نتحقق مما إذا كان يطابق أي استعلام محفوظ
+        // إذا لم يطابق، نمسح query_id
+        const selectedOption = querySelect?.selectedOptions?.[0];
+        if (selectedOption && selectedOption.dataset.queryText) {
+            const storedText = selectedOption.dataset.queryText.trim();
+            const currentText = this.value.trim();
+            // إذا كان النص الحالي لا يطابق النص المخزن، نمسح query_id
+            if (currentText.toLowerCase() !== storedText.toLowerCase()) {
+                clearSelectedQuery();
+            }
+        } else {
+            // إذا لم يكن هناك اختيار، نتأكد من أن query_id فارغ
+            clearSelectedQuery();
+        }
+    }
+});
+
+// ===== 2. عند الضغط على زر X (مسح النص) =====
+clearQueryBtn.addEventListener('click', function (e) {
+    e.stopPropagation();
+    queryInput.value = '';
+    clearSelectedQuery();
+    queryInput.focus();
+    // إخفاء أي نتائج سابقة إذا كانت موجودة
+    if (resultsGrid) {
+        resultsGrid.innerHTML = `
+            <div class="empty-state">
+                <span>🔍</span>
+                <p>Search for documents here</p>
+            </div>
+        `;
+        resultCount.textContent = '0';
+        relevantCount.textContent = '✅ 0';
+        nonRelevantCount.textContent = '❌ 0';
+        toggleEvalStats(false);
+    }
+    if (evaluationPanel) {
+        evaluationPanel.style.display = 'none';
+    }
+});
+
+// ===== 3. عند اختيار استعلام من القائمة المنسدلة =====
+if (querySelect) {
+    querySelect.addEventListener('change', function () {
+        const selectedOption = this.selectedOptions[0];
+        if (selectedOption && selectedOption.dataset.queryText) {
+            const queryText = selectedOption.dataset.queryText;
+            queryInput.value = queryText;
+            lastQueryId = selectedOption.value;
+        } else {
+            // إذا تم اختيار الخيار الفارغ
+            queryInput.value = '';
+            lastQueryId = null;
+        }
+        // إغلاق القائمة المنسدلة
+        this.classList.remove('show');
+        this.style.opacity = '0';
+        this.style.pointerEvents = 'none';
+    });
+}
 
 // ===== Dropdown Toggle (▼) =====
 const dropdownToggleBtn = document.getElementById('dropdownToggleBtn');
@@ -305,15 +386,13 @@ const fetchSearch = async (query, query_id, model, top_k, refine, preprocessing,
 };
 
 // ============================================================
-// ===== دوال عرض النتائج (معدلة) =====
+// ===== دوال عرض النتائج =====
 // ============================================================
 
-// 🔥 دالة مساعدة لإظهار/إخفاء إحصاءات التقييم
 function toggleEvalStats(show) {
     if (evalStats) {
         evalStats.style.display = show ? 'flex' : 'none';
     } else {
-        // حل احتياطي في حال عدم وجود الحاوية
         if (relevantCount) relevantCount.style.display = show ? 'inline-block' : 'none';
         if (nonRelevantCount) nonRelevantCount.style.display = show ? 'inline-block' : 'none';
     }
@@ -331,13 +410,12 @@ const renderResults = (items, isEval) => {
         resultCount.textContent = '0';
         relevantCount.textContent = '✅ 0';
         nonRelevantCount.textContent = '❌ 0';
-        toggleEvalStats(false); // 🔥 إخفاء الإحصاءات
+        toggleEvalStats(false);
         return;
     }
 
     resultCount.textContent = items.length;
 
-    // 🔥 حساب الـ relevant و non‑relevant فقط إذا كان التقييم مفعلاً
     let relevant = 0;
     let nonRelevant = 0;
     if (isEval) {
@@ -349,7 +427,6 @@ const renderResults = (items, isEval) => {
     relevantCount.textContent = `✅ ${relevant}`;
     nonRelevantCount.textContent = `❌ ${nonRelevant}`;
 
-    // 🔥 إظهار أو إخفاء الإحصاءات حسب حالة التقييم
     toggleEvalStats(isEval);
 
     items.forEach((item, index) => {
@@ -429,12 +506,12 @@ const updateEvaluationPanel = (response) => {
 
     if (!isEval || !response) {
         evaluationPanel.style.display = 'none';
-        toggleEvalStats(false); // 🔥 إخفاء الإحصاءات
+        toggleEvalStats(false);
         return;
     }
 
     evaluationPanel.style.display = 'block';
-    toggleEvalStats(true); // 🔥 إظهار الإحصاءات
+    toggleEvalStats(true);
 
     if (response.metrics) {
         renderMetrics(response.metrics);
@@ -513,7 +590,7 @@ resultsGrid.addEventListener('click', function (e) {
 });
 
 // ============================================================
-// ===== Handle Search (معدل) =====
+// ===== Handle Search =====
 // ============================================================
 
 searchBtn.addEventListener('click', async () => {
@@ -523,13 +600,33 @@ searchBtn.addEventListener('click', async () => {
         return;
     }
 
+    // ✅ الحصول على query_id من القائمة المنسدلة (إذا كانت مختارة)
     const selectedOption = querySelect ? querySelect.selectedOptions[0] : null;
     const query_id = selectedOption && selectedOption.value ? selectedOption.value : '';
     const evaluate = evalToggle ? evalToggle.checked : false;
 
+    // ✅ التحقق من التقييم: يجب أن يكون هناك query_id صحيح
     if (evaluate && !query_id) {
-        alert('⚠️ Please select a saved query from the dropdown to enable evaluation (qrels).');
+        alert('⚠️ Please select a saved query from the dropdown to enable evaluation (qrels).\n\nIf you want to search without evaluation, uncheck "Show Evaluation".');
         return;
+    }
+
+    // ✅ إذا كان التقييم مفعلاً، نتحقق من تطابق النص مع النص المخزن
+    if (evaluate && query_id) {
+        const storedText = selectedOption?.dataset?.queryText?.trim() || '';
+        if (storedText && query.toLowerCase() !== storedText.toLowerCase()) {
+            // نعطي تحذيراً للمستخدم بأن النص لا يطابق
+            const confirmSearch = confirm(
+                `⚠️ The query text does not match the stored query for ID "${query_id}".\n\n` +
+                `Stored: "${storedText}"\n` +
+                `Current: "${query}"\n\n` +
+                'Evaluation will be skipped. Do you want to continue searching without evaluation?'
+            );
+            if (!confirmSearch) {
+                return; // المستخدم اختار الإلغاء
+            }
+            // إذا وافق، نستمر في البحث بدون تقييم (سيتم تعطيله في الـ Backend)
+        }
     }
 
     if (loadingSpinner) {
@@ -578,7 +675,7 @@ searchBtn.addEventListener('click', async () => {
             nonRelevantCount.textContent = '❌ 0';
             if (missingCount) missingCount.textContent = '0';
             evaluationPanel.style.display = 'none';
-            toggleEvalStats(false); // 🔥 إخفاء الإحصاءات
+            toggleEvalStats(false);
             lastSearchResponse = null;
             return;
         }
@@ -587,12 +684,38 @@ searchBtn.addEventListener('click', async () => {
         renderResults(response.results, evaluate);
         updateEvaluationPanel(response);
 
-        // 🔥 التأكد من إخفاء الإحصاءات إذا كان التقييم غير مفعّل
         toggleEvalStats(evaluate);
 
         if (evaluate && response.metrics) {
             renderMetrics(response.metrics);
             renderMissingDocs(response.missing_relevant_docs);
+        }
+
+        // ✅ إذا كان هناك تحذير تقييم في الـ response، نعرضه للمستخدم
+        if (response.evaluation_warning) {
+            console.warn('⚠️ Evaluation warning:', response.evaluation_warning);
+            // يمكن عرضه في واجهة المستخدم بطريقة غير مزعجة
+            const warningDiv = document.createElement('div');
+            warningDiv.style.cssText = `
+                background: rgba(255, 193, 7, 0.15);
+                border: 1px solid rgba(255, 193, 7, 0.3);
+                border-radius: 8px;
+                padding: 10px 16px;
+                margin-top: 12px;
+                color: #ffd966;
+                font-size: 0.9rem;
+            `;
+            warningDiv.innerHTML = `⚠️ ${response.evaluation_warning}`;
+            // نضيفه أعلى النتائج
+            const resultsPanel = document.querySelector('.results-panel');
+            const existingWarning = resultsPanel.querySelector('.eval-warning');
+            if (existingWarning) existingWarning.remove();
+            warningDiv.className = 'eval-warning';
+            resultsPanel.insertBefore(warningDiv, resultsGrid);
+        } else {
+            // إزالة أي تحذير سابق
+            const existingWarning = document.querySelector('.eval-warning');
+            if (existingWarning) existingWarning.remove();
         }
 
     } catch (error) {
@@ -615,14 +738,8 @@ searchBtn.addEventListener('click', async () => {
     }
 });
 
-// ===== Clear Query =====
-clearQueryBtn.addEventListener('click', () => {
-    queryInput.value = '';
-    queryInput.focus();
-});
-
 // ============================================================
-// ===== Evaluation Toggle (معدل) =====
+// ===== Evaluation Toggle =====
 // ============================================================
 
 if (evalToggle) {
@@ -632,7 +749,7 @@ if (evalToggle) {
                 evaluationPanel.style.display = 'block';
                 renderResults(lastSearchResponse.results, true);
                 updateEvaluationPanel(lastSearchResponse);
-                toggleEvalStats(true); // 🔥 إظهار الإحصاءات
+                toggleEvalStats(true);
             } else {
                 evaluationPanel.style.display = 'block';
                 metricsContainer.innerHTML = `
@@ -643,14 +760,17 @@ if (evalToggle) {
                 `;
                 missingDocsList.innerHTML = '<p style="color: #6a7aac;">🔍 Perform a search to see evaluation results.</p>';
                 if (missingCount) missingCount.textContent = '0';
-                toggleEvalStats(true); // 🔥 إظهار الإحصاءات (حتى لو كانت 0)
+                toggleEvalStats(true);
             }
         } else {
             evaluationPanel.style.display = 'none';
-            toggleEvalStats(false); // 🔥 إخفاء الإحصاءات
+            toggleEvalStats(false);
             if (lastSearchResponse) {
                 renderResults(lastSearchResponse.results, false);
             }
+            // إزالة أي تحذير تقييم
+            const existingWarning = document.querySelector('.eval-warning');
+            if (existingWarning) existingWarning.remove();
         }
     });
 }
@@ -920,4 +1040,4 @@ generateChartBtn.addEventListener('click', async () => {
     }
 });
 
-console.log('✅ IR-System ready with Hybrid support and document modal.');
+console.log('✅ IR-System ready with Hybrid support, document modal, and query_id management.');
